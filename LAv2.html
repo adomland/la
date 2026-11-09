@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Asylum: Plague — Календарь Дуэлей с заданиями</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #0b0f14;
+            color: #e0e6ed;
+            margin: 0;
+            padding: 24px 12px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1600px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin: 0 0 4px;
+            color: #f0c45a;
+            text-shadow: 0 0 12px rgba(240, 196, 90, 0.3);
+        }
+        .subtitle {
+            color: #8a9bb0;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .time-switch {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #1a2430;
+            border: 1px solid #2f4055;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .select-wrapper:focus-within {
+            border-color: #f0c45a;
+            box-shadow: 0 0 12px rgba(240, 196, 90, 0.2);
+        }
+        .select-wrapper label {
+            font-size: 0.95rem;
+            color: #8a9bb0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        select {
+            background: #11181f;
+            color: #f0c45a;
+            border: 1px solid #2f4055;
+            padding: 8px 32px 8px 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0c45a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            transition: 0.2s;
+        }
+        select:hover {
+            background-color: #1a2430;
+        }
+        select option {
+            background: #11181f;
+            color: #e0e6ed;
+            font-weight: normal;
+            padding: 8px;
+        }
+
+        .current-time {
+            margin-left: auto;
+            background: #11181f;
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: 1px solid #2f4055;
+            font-variant-numeric: tabular-nums;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b0c4de;
+        }
+        .current-time span {
+            color: #f0c45a;
+            font-weight: 600;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .day-card {
+            background: #11181f;
+            border: 1px solid #1f2b38;
+            border-radius: 12px;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .day-card.sunday {
+            border-color: #3a2e1a;
+            background: #16130d;
+        }
+        .day-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #f0c45a;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .day-card.sunday .day-name {
+            color: #c99b3b;
+        }
+        .duel-phase {
+            background: #1e2a3a;
+            border-left: 4px solid #4a90d9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .duel-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6ab0f5;
+            margin-bottom: 4px;
+        }
+        .duel-desc {
+            font-size: 0.85rem;
+            color: #b8d4f0;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        .duel-time {
+            font-size: 0.8rem;
+            color: #8a9bb0;
+            border-top: 1px dashed #2f4055;
+            padding-top: 6px;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .tips-section {
+            margin-bottom: 10px;
+        }
+        .tip-box {
+            background: rgba(230, 80, 80, 0.1);
+            border: 1px solid rgba(230, 80, 80, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 0.8rem;
+            line-height: 1.35;
+            color: #ff9c9c;
+            margin-bottom: 6px;
+        }
+        .tip-box.warning {
+            color: #ffb86c;
+            background: rgba(255, 184, 108, 0.1);
+            border-color: rgba(255, 184, 108, 0.3);
+        }
+        .tip-box strong {
+            color: #fff;
+        }
+
+        .strategy-box {
+            background: #15202b;
+            border: 1px solid #2c3e50;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #b0c4de;
+        }
+        .strategy-title {
+            font-weight: 600;
+            color: #a0c4ff;
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .strategy-advice {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed #2c3e50;
+            color: #8a9bb0;
+            font-style: italic;
+        }
+        .pro-tip {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(240, 196, 90, 0.08);
+            border: 1px solid rgba(240, 196, 90, 0.25);
+            border-radius: 4px;
+            color: #f0c45a;
+            font-size: 0.78rem;
+            line-height: 1.4;
+        }
+        .pro-tip strong {
+            color: #fff;
+        }
+
+        .tasks-section {
+            margin-top: auto;
+        }
+        .tasks-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #c99b3b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #2f4055;
+            padding-bottom: 4px;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.78rem;
+            line-height: 1.45;
+            color: #9aaec2;
+        }
+        .task-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 3px 0;
+            border-bottom: 1px dotted #1f2b38;
+        }
+        .task-list li:last-child {
+            border-bottom: none;
+        }
+        .task-action {
+            color: #b0c4de;
+        }
+        .task-points {
+            color: #f0c45a;
+            font-weight: 600;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .note {
+            background: #11181f;
+            border: 1px solid #1f2b38;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #8a9bb0;
+            margin-top: 8px;
+        }
+        .note strong {
+            color: #f0c45a;
+        }
+        .note code {
+            background: #1a2430;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #d0e0f0;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 1400px) {
+            .calendar {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (max-width: 900px) {
+            .calendar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .calendar {
+                grid-template-columns: 1fr;
+            }
+            .current-time {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .time-switch {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Last Asylum: Plague — Дуэль альянсов</h1>
+    <div class="subtitle">Календарь фаз, заданий, очков и стратегий</div>
+
+    <div class="time-switch">
+        <div class="select-wrapper">
+            <label for="timezone-select">Часовой пояс:</label>
+            <select id="timezone-select" onchange="setTimezone(parseInt(this.value))">
+                <option value="-2" selected>Серверное время (UTC−2)</option>
+                <option value="2">Калининград (UTC+2)</option>
+                <option value="3">Москва (UTC+3)</option>
+                <option value="4">Самара (UTC+4)</option>
+                <option value="5">Екатеринбург (UTC+5)</option>
+                <option value="6">Омск (UTC+6)</option>
+                <option value="7">Красноярск (UTC+7)</option>
+                <option value="8">Иркутск (UTC+8)</option>
+                <option value="9">Якутск (UTC+9)</option>
+                <option value="10">Владивосток (UTC+10)</option>
+                <option value="11">Магадан (UTC+11)</option>
+                <option value="12">Камчатка (UTC+12)</option>
+            </select>
+        </div>
+        <div class="current-time">
+            Сейчас: <span id="current-time-display">--:--:--</span>
+            <span id="current-tz-label" style="color:#8a9bb0; font-weight:400;">(UTC−2)</span>
+        </div>
+    </div>
+
+    <div class="calendar" id="calendar">
+        <!-- Дни генерируются JS -->
+    </div>
+
+    <div class="note">
+        <strong>Как читать календарь:</strong><br>
+        • <strong>Дуэль альянсов</strong> длится 6 дней (пн–сб). В карточках указаны задания, количество очков и стратегические советы.<br>
+        • <strong>Красные кружочки (Задания Сокола):</strong> Не забывайте их снимать вовремя! Во вторник — собираем в среду. В четверг — собираем в пятницу. В воскресенье — копим на понедельник.<br>
+        • <strong>Снаряжение Ворона:</strong> Открываем сундуки в среду, но НЕ надеваем снаряжение.<br>
+        • <strong>Караваны и секретки:</strong> Отправляем только UR (золотые).<br>
+        • <strong>Ежедневный сброс</strong> игры происходит в <code>00:00 UTC−2</code>. Время начала и окончания фаз, а также локальные ивенты (Ворон, Таверна) автоматически пересчитываются под выбранный вами часовой пояс.<br>
+        • <strong>Исследовательская лаборатория 15 ур.:</strong> Открывает ветку исследований Дуэли, дающую множитель к очкам за каждое действие. Без неё вы теряете очки.
+    </div>
+</div>
+
+<script>
+    // ---------- ДАННЫЕ ДУЭЛЕЙ ----------
+    const ALLIANCE_DUEL_PHASES = {
+        0: { 
+            name: 'Подготовка (Setup)', 
+            desc: 'Копите ресурсы и ускорения к новой неделе',
+            tips: [
+                'Не выполняйте задания Сокола! Копите их на понедельник (до 35 шт).'
+            ],
+            strategy: {
+                saveAndSpend: "Копите задания Сокола, энергию, ускорения и ресурсы для следующей недели.",
+                advice: ""
+            },
+            tasks: []
+        },
+        1: { 
+            name: 'Raven', 
+            desc: 'Ворон / Монстры / Задания Сокола',
+            timeHint: { title: 'Улучшение Ворона', serverStart: 12, serverEnd: 16 },
+            tips: [],
+            strategy: {
+                saveAndSpend: "Тратьте накопленную энергию на уничтожение монстров, используйте воронью эссенцию и сдавайте задания Сокола.",
+                advice: "Ускорения строительства лучше приберечь на вторник."
+            },
+            proTip: "Сразу сдайте все накопленные задания Сокола (до 35 шт) для мгновенного рывка очков. Начните строительство зданий, но НЕ нажимайте финальный молоток — сохраните его для пятницы.",
+            tasks: [
+                { action: 'Выполнить 1 задание сокола', points: '10 000' },
+                { action: 'Потратить 1 воронью эссенцию', points: '2 500' },
+                { action: 'Получить 1 фрагмент (UR) за сундук', points: '1 125' },
+                { action: 'Расход 1 энергии', points: '150' },
+                { action: 'Купить набор с алмазами [1 алмаз]', points: '30' },
+                { action: 'Собрать 100 древесины', points: '5' },
+                { action: 'Собрать 100 зерна', points: '5' },
+                { action: 'Собрать 60 трав', points: '5' },
+                { action: 'Потратить 1 вороний плод', points: '3' },
+                { action: 'Использовать 660 противоядия', points: '1' }
+            ]
+        },
+        2: { 
+            name: 'Construction', 
+            desc: 'Территория / Строительство / Караваны / Выжившие',
+            tips: [
+                '<strong>Внимание:</strong> Красные кружочки (Сокол) НЕ снимаем до среды!'
+            ],
+            strategy: {
+                saveAndSpend: "Тратьте ускорения строительства, завершающие молотки, операции UR, желтые караваны и призыв выживших.",
+                advice: "Исследовательские ускорения и сундуки Ворона лучше сохранить для среды."
+            },
+            proTip: "Не опустошайте инвентарь ускорений строительства полностью — остановитесь при достижении нужного уровня наград. Если у вас есть здания с истекающим таймером постройки, нажмите молоток после начала фазы — очки начисляются в момент нажатия.",
+            tasks: [
+                { action: 'Отправить UR караван', points: '100 000' },
+                { action: 'Провести 1 секретную операцию UR', points: '75 000' },
+                { action: 'Нанять выжившего', points: '1 500' },
+                { action: 'Использовать ускорение строительства (1м)', points: '50' },
+                { action: 'Купить набор с алмазами [1 алмаз]', points: '30' },
+                { action: 'Повысить мощь здания на 1', points: '10' }
+            ]
+        },
+        3: { 
+            name: 'Tech', 
+            desc: 'Технологии / Исследования',
+            tips: [
+                'Собираем кружочки (Сокол) за вторник.',
+                '<strong>Внимание:</strong> Открываем сундуки снаряжения Ворона, но НЕ надеваем!'
+            ],
+            strategy: {
+                saveAndSpend: "Тратьте ускорения исследований, открывайте сундуки Ворона высокого уровня, сдавайте задания Сокола.",
+                advice: "Ускорения тренировки войск приберегите на пятницу."
+            },
+            proTip: "Открывайте все накопленные сундуки Ворона (особенно высокоуровневые) для получения крупных очков. Заранее запустите длинные исследования (более 1 дня), чтобы они завершились во время фазы.",
+            tasks: [
+                { action: 'Выполнить 1 задание сокола', points: '10 000' },
+                { action: 'Использовать 1 свиток обучения', points: '300' },
+                { action: 'Использовать ускорение исследований (1м)', points: '50' },
+                { action: 'Купить набор с алмазами [1 алмаз]', points: '30' },
+                { action: 'Повысить технологическую мощь на 1', points: '10' }
+            ]
+        },
+        4: { 
+            name: 'Hero', 
+            desc: 'Герои / Развитие',
+            timeHint: { title: 'Найм в таверне', serverStart: 8, serverEnd: 12 },
+            tips: [
+                '<strong>Внимание:</strong> Красные кружочки (Сокол) НЕ снимаем до пятницы!'
+            ],
+            strategy: {
+                saveAndSpend: "Тратьте фрагменты героев (UR и SSR), материалы на противоядие и совершайте найм героев.",
+                advice: ""
+            },
+            proTip: "Тратьте все накопленные фрагменты героев, опыт и билеты на найм. Это лучший день для прокачки звёзд и навыков — очки за фрагменты UR/SSR самые высокие.",
+            tasks: [
+                { action: 'Использовать 1 фрагмент пробуждения героя', points: '10 000' },
+                { action: 'Потратить 1 фрагмент UR героя', points: '10 000' },
+                { action: 'Использовать 1 фрагмент SSR героя', points: '3 500' },
+                { action: 'Нанять героя (1 раз)', points: '1 500' },
+                { action: 'Использовать 1 фрагмент SR героя', points: '1 000' },
+                { action: 'Купить набор с алмазами [1 алмаз]', points: '30' },
+                { action: 'Использовать 1 значок навыка', points: '10' },
+                { action: 'Использовать 660 противоядия', points: '1' }
+            ]
+        },
+        5: { 
+            name: 'Preparation', 
+            desc: 'Обучение армии / Подготовка',
+            tips: [
+                'Собираем кружочки (Сокол) за четверг.'
+            ],
+            strategy: {
+                saveAndSpend: "Тратьте ускорения тренировки солдат, свитки обучения и собирайте ресурсы на карте.",
+                advice: ""
+            },
+            proTip: "Используйте сохранённые завершения строительства (молотки). Тренируйте войска — это даёт очки. Если параллельно идёт Битва на выживание, очки могут удваиваться.",
+            tasks: [
+                { action: 'Выполнить 1 задание сокола', points: '10 000' },
+                { action: 'Использовать ускорение исследований (1м)', points: '50' },
+                { action: 'Использовать ускорение строительства (1м)', points: '50' },
+                { action: 'Использовать ускорение тренировки (1м)', points: '50' },
+                { action: 'Купить набор с алмазами [1 алмаз]', points: '30' },
+                { action: 'Повысить мощь здания на 1', points: '10' },
+                { action: 'Повысить технологическую мощь на 1', points: '10' }
+            ]
+        },
+        6: { 
+            name: 'Raid', 
+            desc: 'PvP / Рейд / Серверные атаки',
+            tips: [
+                'Отправляем только UR (золотые) секретки и караваны.'
+            ],
+            strategy: {
+                saveAndSpend: "Используйте боевые баффы, ускорения боя и операции UR для атак по врагам.",
+                advice: "ОБЯЗАТЕЛЬНО ставьте щиты перед сном!"
+            },
+            proTip: "Выбирайте стратегию: либо активные PvP-атаки (больше очков), либо щиты (гарантированный минимум, но не максимум). Не оставляйте стены открытыми.",
+            tasks: [
+                { action: 'Отправить UR караван', points: '100 000' },
+                { action: 'Провести 1 секретную операцию UR', points: '75 000' },
+                { action: 'Потратить 1 фрагмент UR героя', points: '10 000' },
+                { action: 'Использовать 1 фрагмент SSR героя', points: '3 500' },
+                { action: 'Потратить 1 воронью эссенцию', points: '2 500' },
+                { action: 'Нанять выжившего', points: '1 500' },
+                { action: 'Нанять героя (1 раз)', points: '1 500' },
+                { action: 'Использовать 1 фрагмент SR героя', points: '1 000' },
+                { action: 'Использовать ускорение исследований (1м)', points: '50' },
+                { action: 'Использовать ускорение лечения (1м)', points: '50' },
+                { action: 'Использовать ускорение строительства (1м)', points: '50' },
+                { action: 'Использовать ускорение тренировки (1м)', points: '50' },
+                { action: 'Купить набор с алмазами [1 алмаз]', points: '30' }
+            ]
+        }
+    };
+
+    const DAY_NAMES = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+    const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
+
+    let currentOffset = -2;
+
+    function setTimezone(offset) {
+        currentOffset = offset;
+        renderCalendar();
+        updateCurrentTime();
+    }
+
+    function getDiffFromServer() {
+        return currentOffset - (-2); 
+    }
+
+    function formatHour(hour) {
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${pad(hour % 24)}:00`;
+    }
+
+    function formatTimeHint(hint) {
+        if (!hint) return '';
+        
+        const diff = getDiffFromServer();
+        const start = (hint.serverStart + diff + 24) % 24;
+        const end = (hint.serverEnd + diff + 24) % 24;
+        
+        const tzLabel = currentOffset === -2 ? 'сервер' : `UTC${currentOffset > 0 ? '+' : ''}${currentOffset}`;
+        
+        return `<div class="duel-time" style="color:#f0c45a; border-top: none; padding-top: 4px; margin-top: 4px;">⏱ ${hint.title}: ${formatHour(start)}–${formatHour(end)} (${tzLabel})</div>`;
+    }
+
+    function getDuelTimeString() {
+        const diff = getDiffFromServer();
+        const start = (0 + diff + 24) % 24;
+        const end = (23 + diff) % 24;
+        
+        if (start === 0) {
+            return '⏱ Фаза: 00:00 – 23:59';
+        } else {
+            return `⏱ Фаза: ${formatHour(start)} – ${formatHour(end + 1)} (след. дня)`;
+        }
+    }
+
+    function renderCalendar() {
+        const container = document.getElementById('calendar');
+        container.innerHTML = '';
+        const phaseTimeString = getDuelTimeString();
+
+        DAY_ORDER.forEach(dayIndex => {
+            const card = document.createElement('div');
+            card.className = 'day-card' + (dayIndex === 0 ? ' sunday' : '');
+
+            const dayName = document.createElement('div');
+            dayName.className = 'day-name';
+            dayName.textContent = DAY_NAMES[dayIndex];
+            card.appendChild(dayName);
+
+            const duel = ALLIANCE_DUEL_PHASES[dayIndex];
+            if (duel) {
+                const duelDiv = document.createElement('div');
+                duelDiv.className = 'duel-phase';
+                duelDiv.innerHTML = `
+                    <div class="duel-title">${duel.name}</div>
+                    <div class="duel-desc">${duel.desc}</div>
+                    <div class="duel-time">${phaseTimeString}</div>
+                    ${formatTimeHint(duel.timeHint)}
+                `;
+                card.appendChild(duelDiv);
+
+                if (duel.tips && duel.tips.length > 0) {
+                    const tipsSection = document.createElement('div');
+                    tipsSection.className = 'tips-section';
+                    
+                    duel.tips.forEach(tip => {
+                        const tipDiv = document.createElement('div');
+                        const isWarning = tip.includes('Внимание') || tip.includes('ОБЯЗАТЕЛЬНО');
+                        tipDiv.className = 'tip-box' + (isWarning ? ' warning' : '');
+                        tipDiv.innerHTML = tip;
+                        tipsSection.appendChild(tipDiv);
+                    });
+                    card.appendChild(tipsSection);
+                }
+
+                if (duel.strategy) {
+                    const strategyDiv = document.createElement('div');
+                    strategyDiv.className = 'strategy-box';
+                    let html = `<div class="strategy-title">Стратегия</div>`;
+                    if (duel.strategy.saveAndSpend) {
+                        html += `<div>${duel.strategy.saveAndSpend}</div>`;
+                    }
+                    if (duel.strategy.advice) {
+                        html += `<div class="strategy-advice"><strong>Совет:</strong> ${duel.strategy.advice}</div>`;
+                    }
+                    strategyDiv.innerHTML = html;
+                    card.appendChild(strategyDiv);
+                }
+
+                if (duel.proTip) {
+                    const proTipDiv = document.createElement('div');
+                    proTipDiv.className = 'pro-tip';
+                    proTipDiv.innerHTML = `<strong>💡 Профи-совет:</strong> ${duel.proTip}`;
+                    card.appendChild(proTipDiv);
+                }
+
+                if (duel.tasks && duel.tasks.length > 0) {
+                    const tasksSection = document.createElement('div');
+                    tasksSection.className = 'tasks-section';
+                    tasksSection.innerHTML = '<div class="tasks-title">Задания и очки</div>';
+                    
+                    const taskList = document.createElement('ul');
+                    taskList.className = 'task-list';
+                    
+                    duel.tasks.forEach(task => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<span class="task-action">${task.action}</span><span class="task-points">+${task.points}</span>`;
+                        taskList.appendChild(li);
+                    });
+                    
+                    tasksSection.appendChild(taskList);
+                    card.appendChild(tasksSection);
+                }
+            }
+
+            container.appendChild(card);
+        });
+    }
+
+    function updateCurrentTime() {
+        const now = new Date();
+        const targetTime = new Date(now.getTime() + currentOffset * 60 * 60 * 1000);
+
+        const hh = String(targetTime.getUTCHours()).padStart(2, '0');
+        const mm = String(targetTime.getUTCMinutes()).padStart(2, '0');
+        const ss = String(targetTime.getUTCSeconds()).padStart(2, '0');
+
+        document.getElementById('current-time-display').textContent = `${hh}:${mm}:${ss}`;
+        
+        const tzLabel = currentOffset === -2 ? '(UTC−2)' : `(UTC${currentOffset > 0 ? '+' : ''}${currentOffset})`;
+        document.getElementById('current-tz-label').textContent = tzLabel;
+    }
+
+    renderCalendar();
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+</script>
+</body>
+</html>
