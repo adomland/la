@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гонка за эликсиром — тактика альянса</title>
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --card-bg: #1a1d2d;
+            --text-main: #d1d5db;
+            --text-muted: #9ca3af;
+            --accent-gold: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --border-color: #374151;
+            --table-stripe: #232736;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-color) 70%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--accent-gold), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-purple);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        strong {
+            color: #ffffff;
+        }
+
+        /* Header */
+        .header-subtitle {
+            text-align: center;
+            color: var(--accent-purple);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Cards & Sections */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        /* Lists */
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        li::marker {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* Image Placeholders */
+        .image-placeholder {
+            width: 100%;
+            background-color: #121420;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .image-placeholder svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 10px;
+            fill: var(--accent-purple);
+            opacity: 0.7;
+        }
+
+        .image-caption {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #1f2233;
+            color: var(--accent-gold);
+            padding: 12px 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--table-stripe);
+        }
+
+        tr:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Specific Elements */
+        .badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-gold);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .important-note {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(26, 29, 45, 1) 100%);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
+
+        .phase-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .phase-box h3 {
+            margin-top: 0;
+            color: var(--accent-green);
+        }
+
+        .highlight-text {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+        
+        .emoji-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .card { padding: 15px; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Гонка за эликсиром</h1>
+    <div class="header-subtitle">Тактика альянса • Last Asylum: Plague</div>
+
+    <!-- Раздел 1: Строения -->
+    <div class="card">
+        <h2>🏰 Ключевые строения и их приоритет</h2>
+        <p>На карте 11 строений, и они открываются поэтапно. Вот главные цели:</p>
+        <ul>
+            <li><strong>Наблюдательный пункт (Обсерватория):</strong> открывается с первой минуты, даёт <span class="badge">+10%</span> ко всем очкам альянса. Брать его нужно как можно раньше — в начале боя он окупается многократно, а под конец почти бесполезен.</li>
+            <li><strong>Врата миграции:</strong> доступны сразу, сокращают перезарядку перемещения на <span class="badge">50%</span>, что даёт мобильность и скорость реакции.</li>
+            <li><strong>Алхимические мастерские:</strong> стоят у входов каждого альянса, дают много очков (<span class="badge">30/20</span>) и доступны с первой минуты.</li>
+            <li><strong>Замок эликсира:</strong> главная цель, открывается на 10-й минуте, даёт больше всего очков (<span class="badge">48/32</span>).</li>
+            <li><strong>Лечебные палатки:</strong> лечат 15 раненых каждые 10 секунд.</li>
+            <li><strong>Реликвии войны и Проклятый алтарь:</strong> открываются вместе с Замком, дают баф союзникам или дебаф врагам на <span class="badge">15%</span>.</li>
+            <li><strong>Лагеря с травами:</strong> появляются с 13-й минуты — сбор трав приносит очки без прямого боя.</li>
+        </ul>
+
+        <img src="1.png" style="width:100%; border-radius:8px;" alt="...">
+    </div>
+
+    <!-- Раздел 2: Приоритет захвата -->
+    <div class="card">
+        <h2>🎯 Приоритет захвата точек</h2>
+        <p>Порядок захвата по важности и темпам открытия (номера приоритета):</p>
+        <ol>
+            <li><strong>Наблюдательный пункт</strong> — брать первым (+10% ко всем очкам альянса).</li>
+            <li><strong>Врата миграции</strong> — сразу после, ради мобильности (-50% перезарядки перемещения).</li>
+            <li><strong>Алхимическая мастерская у своего входа</strong> — «якорь» и стабильный источник очков.</li>
+            <li><strong>Замок эликсира</strong> — с 10-й минуты главная концентрация сил (48/32).</li>
+            <li><strong>Реликвии войны / Проклятый алтарь</strong> — баф/дебаф, берут ради контроля над Замком.</li>
+            <li><strong>Лечебные палатки</strong> — держат армию в бою.</li>
+            <li><strong>Лагеря с травами</strong> (с 13-й минуты) — очки без боя.</li>
+        </ol>
+
+        <img src="2.jpg" style="width:100%; border-radius:8px;" alt="...">
+    </div>
+
+    <!-- Раздел 3: Тактика -->
+    <div class="card">
+        <h2>⚔️ Тактика</h2>
+        <p>Строим бой по принципу темпа и мобильности:</p>
+        <ul>
+            <li><strong>1. Сначала темп, потом очки.</strong> Захватите Наблюдательный пункт и Врата миграции, чтобы получить множитель очков и скорость перемещения. Без этого нас будут переигрывать по всей карте.</li>
+            <li><strong>2. Проверка боем.</strong> Более слабые, отправляйте слабые походы первыми. Так вы проверите, стоит ли у врага защита, и не сольёте сильный марш впустую.</li>
+            <li><strong>3. Не защищайтесь всеми силами.</strong> Против заведомо более сильного противника лучше снять защиту и сохранить войска, чем отдать их в мясорубке. Основной отряд включайте в оборону только против равного или слабого врага.</li>
+            <li><strong>4. Сбор трав (с 13-й минуты).</strong> На карте появляются лагеря с травами. Отправляйте туда отряды (можно слабых), чтобы получать очки без прямого боя.</li>
+        </ul>
+    </div>
+
+    <!-- Раздел 4: Пошаговый план -->
+    <div class="card">
+        <h2>⏱️ Пошаговый план по фазам</h2>
+
+        <div class="phase-box">
+            <h3>Фаза 1: первые 10 минут — захват темпа</h3>
+            <p>Нельзя просто стоять на точке. Ваша задача — взять здания, которые дают максимальный стартовый разгон.</p>
+            <ol>
+                <li><strong>Наблюдательный пункт</strong> — брать первым, +10% ко всем очкам.</li>
+                <li><strong>Врата миграции</strong> — критично для контроля, -50% перезарядки перемещения.</li>
+                <li><strong>Алхимическая мастерская у своего входа</strong> — «якорь» и много очков. <em>Не оставляйте их без защиты.</em></li>
+            </ol>
+        </div>
+
+        <div class="phase-box">
+            <h3>Фаза 2: 10–13 минут — борьба за центр</h3>
+            <p>На 10-й минуте открывается Замок эликсира.</p>
+            <ul>
+                <li><strong>Замок эликсира</strong> — главная цель, даёт больше всего очков (48/32). Основные силы альянса должны сконцентрироваться на его захвате и удержании. <strong>Никогда не покидайте Замок, если он уже ваш;</strong> всегда оставляйте там минимум 2–3 защитников.</li>
+                <li><strong>Реликвии войны / Проклятый алтарь</strong> — ситуативно. Дают баф союзникам или дебаф врагам, берут, если есть свободный сильный отряд, который не нужен в центре. Не распыляйте силы.</li>
+            </ul>
+            <p><strong>Действие:</strong> пока основная группа штурмует Замок, отряд поддержки может попытаться взять Реликвии, но только если это не ослабит натиск на центр.</p>
+        </div>
+
+        <div class="phase-box">
+            <h3>Фаза 3: 13–30 минут — удержание и сбор</h3>
+            <ul>
+                <li><strong>Сбор трав (с 13-й минуты).</strong> Отправляйте слабых или освободившихся игроков в лагеря, чтобы они приносили очки без риска потерять ключевые точки.</li>
+                <li><strong>Контроль, а не захват.</strong> Главная задача — не дать врагу отбить Замок и Обсерваторию. Если у вас численное преимущество на точке, сразу перемещайтесь туда, где нужна помощь.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Раздел 5: Ключевые правила -->
+    <div class="card">
+        <h2>📜 Ключевые тактические правила</h2>
+        <ul>
+            <li><strong>Всегда атакуйте, не собирайте ралли:</strong> атака запускается мгновенно и не может быть отменена.</li>
+            <li><strong>Используйте второй отряд для рейдов</strong> — отбивайте точки или мешайте сбору, когда основной отряд врага ушёл.</li>
+            <li><strong>Не защищайтесь в проигрышном бою:</strong> снимайте защиту и сохраняйте войска; основной отряд в оборону — только против равного или слабого противника.</li>
+        </ul>
+    </div>
+
+    <!-- Раздел 6: Роли -->
+    <div class="card">
+        <h2>👥 Распределение ролей: 20 бойцов</h2>
+        <p>Бой часто идёт на двух фронтах (две группы по 10 человек), поэтому состав делится на две тактические группы — «Альфа» и «Браво» — плюс два свободных агента.</p>
+
+        <h3>Группа «Альфа» (10 человек): главный удар и контроль центра</h3>
+        <p>Отвечает за захват и удержание Замка эликсира и Наблюдательного пункта — самых важных объектов по очкам и множителю.</p>
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th>Кол-во</th>
+                        <th>Задача и позиция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Лидер группы (R4/R5)</strong></td>
+                        <td>1</td>
+                        <td>Координирует «Альфу», решает о переброске сил на Замок или Обсерваторию; должен быть в центре событий.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Тяжёлые штурмовики (Main Force)</strong></td>
+                        <td>4</td>
+                        <td>Ядро атаки на Замок эликсира. Заходят первыми, ломают защиту, удерживают здание.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Защитники Обсерватории</strong></td>
+                        <td>2</td>
+                        <td>Захватывают Наблюдательный пункт на первой минуте и удерживают его (+10% к очкам).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ротация / Поддержка</strong></td>
+                        <td>3</td>
+                        <td>Помогают там, где идёт самая жаркая борьба, или мешают врагу на соседних точках.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Группа «Браво» (10 человек): мобильность, фланги и ресурсы</h3>
+        <p>Отвечает за Врата миграции, Алхимические мастерские и сбор трав — обеспечивает тыл и не даёт врагу переиграть по карте.</p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th>Кол-во</th>
+                        <th>Задача и позиция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Лидер группы (R4)</strong></td>
+                        <td>1</td>
+                        <td>Координирует «Браво», следит за появлением лагерей с травами и угрозами на флангах.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Захватчики Врат миграции</strong></td>
+                        <td>2</td>
+                        <td>Приоритет №1 группы: захватывают Врата в первые минуты и удерживают их.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Контроль мастерских</strong></td>
+                        <td>2</td>
+                        <td>Держат Алхимическую мастерскую у своего входа — стабильный источник очков и «якорь».</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Сборщики трав (с 13-й минуты)</strong></td>
+                        <td>3</td>
+                        <td>Когда появляются лагеря с травами, идут туда и приносят очки без прямого боя.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Фланговые рейдеры</strong></td>
+                        <td>2</td>
+                        <td>Атакуют вражеские мастерские или лечебные палатки, если основные силы врага ушли.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Свободные агенты (2 человека): глаза и реакция</h3>
+        <p>Эти двое не привязаны к конкретной группе и действуют по ситуации, закрывая дыры.</p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th>Кол-во</th>
+                        <th>Задача и позиция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Разведчик-координатор</strong></td>
+                        <td>1</td>
+                        <td>Следит за картой, сообщает о передвижениях врага, замечает точки без защиты.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Универсальный дублёр</strong></td>
+                        <td>1</td>
+                        <td>Вступает в бой там, где нужна помощь: «Альфе» на Замке или «Браво» на Вратах.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Важное примечание -->
+    <div class="important-note">
+        <h3 style="margin-top: 0; color: var(--accent-purple);">⚠️ Важное примечание по тактике</h3>
+        <p style="margin-bottom: 0;">Такое распределение не означает, что «Альфа» никогда не помогает «Браво». Лидеры групп должны постоянно быть на связи. Например, если «Браво» видит, что враг стягивает все силы к Замку, их фланговые рейдеры должны немедленно переключиться на помощь «Альфе» в центре. <strong>Гибкость и скорость реакции здесь важнее, чем строгое следование ролям.</strong></p>
+    </div>
+
+    <!-- Финальная инфографика -->
+    <div class="card">
+        <h2 style="border-color: var(--accent-gold);">💡 Сводный гайд по событию</h2>
+        <img src="3.jpg" style="width:100%; border-radius:8px;" alt="...">
+    </div>
+
+</div>
+
+</body>
+</html>
