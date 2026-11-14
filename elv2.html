@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гонка за эликсиром — тактика альянса</title>
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --card-bg: #1a1d2d;
+            --text-main: #d1d5db;
+            --text-muted: #9ca3af;
+            --accent-gold: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --border-color: #374151;
+            --table-stripe: #232736;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-color) 70%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3, h4 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--accent-gold), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-purple);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        strong {
+            color: #ffffff;
+        }
+
+        .header-subtitle {
+            text-align: center;
+            color: var(--accent-purple);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        li::marker {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            background-color: #121420;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .image-placeholder svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 10px;
+            fill: var(--accent-purple);
+            opacity: 0.7;
+        }
+
+        .image-caption {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #1f2233;
+            color: var(--accent-gold);
+            padding: 12px 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--table-stripe);
+        }
+
+        tr:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-gold);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .important-note {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(26, 29, 45, 1) 100%);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
+
+        .phase-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .phase-box h3 {
+            margin-top: 0;
+            color: var(--accent-green);
+        }
+
+        .phase-box.alpha {
+            border-left-color: var(--accent-gold);
+        }
+        .phase-box.alpha h3 {
+            color: var(--accent-gold);
+        }
+        .phase-box.bravo {
+            border-left-color: var(--accent-purple);
+        }
+        .phase-box.bravo h3 {
+            color: var(--accent-purple);
+        }
+
+        .highlight-text {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .emoji-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* ── Player names (editable) ── */
+        .player-name {
+            color: var(--accent-gold);
+            font-weight: 600;
+            border-bottom: 1px dotted rgba(245, 158, 11, 0.5);
+            cursor: help;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .player-name:hover {
+            color: #fbbf24;
+            border-bottom-color: #fbbf24;
+        }
+
+        /* ── Participants inputs ── */
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 14px;
+            margin-top: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .player-input {
+            background-color: #121420;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .player-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+
+        .player-input::placeholder {
+            color: #4b5563;
+        }
+
+        .participant-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .card { padding: 15px; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 8px 10px; }
+            .participants-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Гонка за эликсиром</h1>
+    <div class="header-subtitle">Тактика альянса • Last Asylum: Plague</div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 1: Строения
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>🏰 Ключевые строения и их приоритет</h2>
+        <p>На карте 11 строений, и они открываются поэтапно. Вот главные цели:</p>
+        <ul>
+            <li><strong>Наблюдательный пункт (Обсерватория):</strong> открывается с первой минуты, даёт <span class="badge">+10%</span> ко всем очкам альянса. Брать его нужно как можно раньше — в начале боя он окупается многократно, а под конец почти бесполезен.</li>
+            <li><strong>Врата миграции:</strong> доступны сразу, сокращают перезарядку перемещения на <span class="badge">50%</span>, что даёт мобильность и скорость реакции.</li>
+            <li><strong>Алхимические мастерские:</strong> стоят у входов каждого альянса, дают много очков (<span class="badge">30/20</span>) и доступны с первой минуты.</li>
+            <li><strong>Замок эликсира:</strong> главная цель, открывается на 10-й минуте, даёт больше всего очков (<span class="badge">48/32</span>).</li>
+            <li><strong>Лечебные палатки:</strong> лечат 15 раненых каждые 10 секунд.</li>
+            <li><strong>Реликвии войны и Проклятый алтарь:</strong> открываются вместе с Замком, дают баф союзникам или дебаф врагам на <span class="badge">15%</span>.</li>
+            <li><strong>Лагеря с травами:</strong> появляются с 13-й минуты — сбор трав приносит очки без прямого боя.</li>
+        </ul>
+
+        <img src="1.png" style="width:100%; border-radius:8px;" alt="...">
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 2: Приоритет захвата
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>🎯 Приоритет захвата точек</h2>
+        <p>Порядок захвата по важности и темпам открытия (номера приоритета):</p>
+        <ol>
+            <li><strong>Наблюдательный пункт</strong> — брать первым (+10% ко всем очкам альянса).</li>
+            <li><strong>Врата миграции</strong> — сразу после, ради мобильности (-50% перезарядки перемещения).</li>
+            <li><strong>Алхимическая мастерская у своего входа</strong> — «якорь» и стабильный источник очков.</li>
+            <li><strong>Замок эликсира</strong> — с 10-й минуты главная концентрация сил (48/32).</li>
+            <li><strong>Реликвии войны / Проклятый алтарь</strong> — баф/дебаф, берут ради контроля над Замком.</li>
+            <li><strong>Лечебные палатки</strong> — держат армию в бою.</li>
+            <li><strong>Лагеря с травами</strong> (с 13-й минуты) — очки без боя.</li>
+        </ol>
+
+        <img src="2.jpg" style="width:100%; border-radius:8px;" alt="...">
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 3: Тактика
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>⚔️ Тактика</h2>
+        <p>Строим бой по принципу темпа и мобильности:</p>
+        <ul>
+            <li><strong>1. Сначала темп, потом очки.</strong> Захватите Наблюдательный пункт и Врата миграции, чтобы получить множитель очков и скорость перемещения. Без этого нас будут переигрывать по всей карте.</li>
+            <li><strong>2. Проверка боем.</strong> Более слабые, отправляйте слабые походы первыми. Так вы проверите, стоит ли у врага защита, и не сольёте сильный марш впустую.</li>
+            <li><strong>3. Не защищайтесь всеми силами.</strong> Против заведомо более сильного противника лучше снять защиту и сохранить войска, чем отдать их в мясорубке. Основной отряд включайте в оборону только против равного или слабого врага.</li>
+            <li><strong>4. Сбор трав (с 13-й минуты).</strong> На карте появляются лагеря с травами. Отправляйте туда отряды (можно слабых), чтобы получать очки без прямого боя.</li>
+        </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 4: Пошаговый план по фазам
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>⏱️ Пошаговый план по фазам</h2>
+
+        <div class="phase-box">
+            <h3>Фаза 1: первые 10 минут — захват темпа</h3>
+            <p>Нельзя просто стоять на точке. Ваша задача — взять здания, которые дают максимальный стартовый разгон.</p>
+            <ol>
+                <li><strong>Наблюдательный пункт</strong> — брать первым, +10% ко всем очкам.</li>
+                <li><strong>Врата миграции</strong> — критично для контроля, -50% перезарядки перемещения.</li>
+                <li><strong>Алхимическая мастерская у своего входа</strong> — «якорь» и много очков. <em>Не оставляйте их без защиты.</em></li>
+            </ol>
+        </div>
+
+        <div class="phase-box">
+            <h3>Фаза 2: 10–13 минут — борьба за центр</h3>
+            <p>На 10-й минуте открывается Замок эликсира.</p>
+            <ul>
+                <li><strong>Замок эликсира</strong> — главная цель, даёт больше всего очков (48/32). Основные силы альянса должны сконцентрироваться на его захвате и удержании. <strong>Никогда не покидайте Замок, если он уже ваш;</strong> всегда оставляйте там минимум 2–3 защитников.</li>
+                <li><strong>Реликвии войны / Проклятый алтарь</strong> — ситуативно. Дают баф союзникам или дебаф врагам, берут, если есть свободный сильный отряд, который не нужен в центре. Не распыляйте силы.</li>
+            </ul>
+            <p><strong>Действие:</strong> пока основная группа штурмует Замок, отряд поддержки может попытаться взять Реликвии, но только если это не ослабит натиск на центр.</p>
+        </div>
+
+        <div class="phase-box">
+            <h3>Фаза 3: 13–30 минут — удержание и сбор</h3>
+            <ul>
+                <li><strong>Сбор трав (с 13-й минуты).</strong> Отправляйте слабых или освободившихся игроков в лагеря, чтобы они приносили очки без риска потерять ключевые точки.</li>
+                <li><strong>Контроль, а не захват.</strong> Главная задача — не дать врагу отбить Замок и Обсерваторию. Если у вас численное преимущество на точке, сразу перемещайтесь туда, где нужна помощь.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 5: Поминутный план захвата (NEW)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>⏱️ Поминутный план захвата</h2>
+        <p>Детальный план по минутам с конкретными исполнителями.</p>
+
+        <h3 style="color: var(--accent-green);">Фаза 1: 0–10 минут — Захват темпа</h3>
+        <p><em>Задача: Взять здания, дающие максимальный стартовый разгон, и обеспечить мобильность.</em></p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>Время</th><th>Игроки</th><th>Действие</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0–1 мин</strong></td>
+                        <td>Защитники Обсерватории: <span class="player-name" data-player="kittt777">kittt777</span>, <span class="player-name" data-player="Djonny98">Djonny98</span></td>
+                        <td>Немедленно захватывают Наблюдательный пункт. Это приоритет №1, чтобы включить множитель очков для всего альянса.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>0–2 мин</strong></td>
+                        <td>Захватчики Врат миграции: <span class="player-name" data-player="FrostmourneV2">FrostmourneV2</span>, <span class="player-name" data-player="Aanutka89">Aanutka89</span></td>
+                        <td>Сразу идут на Врата миграции. Контроль над ними даёт скорость перемещения, без которой альянс будет проигрывать по карте.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1–5 мин</strong></td>
+                        <td>Контроль мастерских: <span class="player-name" data-player="artemsaibel">artemsaibel</span>, <span class="player-name" data-player="YanaYa">YanaYa</span></td>
+                        <td>Занимают Алхимическую мастерскую у своего входа. Это стабильный источник очков и «якорь», который нельзя оставлять без защиты.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2–10 мин</strong></td>
+                        <td>Тяжёлые штурмовики: <span class="player-name" data-player="LFendeR">LFendeR</span>, <span class="player-name" data-player="Vadyxa">Vadyxa</span>, <span class="player-name" data-player="Ольгинья">Ольгинья</span>, <span class="player-name" data-player="faker2k">faker2k</span></td>
+                        <td>Ядро атаки. Начинают давление на центральные точки и мастерские противника, чтобы не дать врагу набрать очки. Не распыляются, а готовятся к рывку на Замок.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Постоянно</strong></td>
+                        <td>Ротация / Поддержка: <span class="player-name" data-player="ЧумаВой">ЧумаВой</span>, <span class="player-name" data-player="Anchorro">Anchorro</span>, <span class="player-name" data-player="Murchik-mur-mur">Murchik-mur-mur</span></td>
+                        <td>Помогают там, где начинается самая жаркая борьба, или мешают врагу на соседних точках. Действуют как «скорая помощь» для Альфы и Браво.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="color: var(--accent-green);">Фаза 2: 10–13 минут — Борьба за центр</h3>
+        <p><em>Задача: Сконцентрировать основные силы на Замке эликсира.</em></p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>Время</th><th>Игроки</th><th>Действие</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>10:00</strong></td>
+                        <td>Вся группа «Альфа» (Лидер <span class="player-name" data-player="adom">adom</span>, штурмовики, поддержка)</td>
+                        <td>Замок эликсира открывается. Основные силы немедленно идут на штурм. Штурмовики заходят первыми, ломают защиту и удерживают здание.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10:00+</strong></td>
+                        <td>Фланговые рейдеры: <span class="player-name" data-player="LAPYlllKA">LAPYlllKA</span>, <span class="player-name" data-player="Mara19Dr">Mara19Dr</span></td>
+                        <td>Пока основные силы врага стягиваются к Замку, атакуют вражеские мастерские или лечебные палатки, чтобы ослабить его тыл.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10:00+</strong></td>
+                        <td>Лидер «Браво»: <span class="player-name" data-player="SharlottaSha">SharlottaSha</span></td>
+                        <td>Следит за флангами и появлением угроз. Если враг давит на Замок, может перебросить часть «Браво» на помощь «Альфе».</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10–13 мин</strong></td>
+                        <td>Ротация / Поддержка</td>
+                        <td>Если есть свободный сильный отряд, может попытаться взять Реликвии войны / Проклятый алтарь для бафа/дебафа, но только если это не ослабит натиск на Замок.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="color: var(--accent-green);">Фаза 3: 13–30 минут — Удержание и сбор</h3>
+        <p><em>Задача: Не отдать захваченные ключевые точки и добрать очки на травах.</em></p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>Время</th><th>Игроки</th><th>Действие</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>13:00</strong></td>
+                        <td>Сборщики трав: <span class="player-name" data-player="Defibrillator360">Defibrillator360</span>, <span class="player-name" data-player="Graber">Graber</span>, <span class="player-name" data-player="TheMadDoctor26">TheMadDoctor26</span></td>
+                        <td>В лагерях появляются травы. Отправляются на сбор, чтобы приносить очки без прямого боя и без риска потерять ключевые точки.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>13–30 мин</strong></td>
+                        <td>Тяжёлые штурмовики + Защитники Обсерватории</td>
+                        <td>Удержание Замка и Обсерватории. Главная задача — не дать врагу отбить эти объекты. Минимум 2–3 защитника всегда остаются на Замке.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>13–30 мин</strong></td>
+                        <td>Фланговые рейдеры</td>
+                        <td>Продолжают рейды на вражеские точки, чтобы мешать сбору и отвлекать силы от центра.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 6: Ключевые правила
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>📜 Ключевые тактические правила</h2>
+        <ul>
+            <li><strong>Всегда атакуйте, не собирайте ралли:</strong> атака запускается мгновенно и не может быть отменена.</li>
+            <li><strong>Используйте второй отряд для рейдов</strong> — отбивайте точки или мешайте сбору, когда основной отряд врага ушёл.</li>
+            <li><strong>Не защищайтесь в проигрышном бою:</strong> снимайте защиту и сохраняйте войска; основной отряд в оборону — только против равного или слабого противника.</li>
+        </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 7: Распределение ролей (с составом)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>👥 Распределение ролей: 20 бойцов</h2>
+        <p>Бой часто идёт на двух фронтах (две группы по 10 человек), поэтому состав делится на две тактические группы — «Альфа» и «Браво» — плюс два свободных агента.</p>
+
+        <h3>Группа «Альфа» (10 человек): главный удар и контроль центра</h3>
+        <p>Отвечает за захват и удержание Замка эликсира и Наблюдательного пункта — самых важных объектов по очкам и множителю.</p>
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th>Кол-во</th>
+                        <th>Состав</th>
+                        <th>Задача и позиция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Лидер группы (R4/R5)</strong></td>
+                        <td>1</td>
+                        <td><span class="player-name" data-player="adom">adom</span></td>
+                        <td>Координирует «Альфу», решает о переброске сил на Замок или Обсерваторию; должен быть в центре событий.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Тяжёлые штурмовики (Main Force)</strong></td>
+                        <td>4</td>
+                        <td><span class="player-name" data-player="LFendeR">LFendeR</span>, <span class="player-name" data-player="Vadyxa">Vadyxa</span>, <span class="player-name" data-player="Ольгинья">Ольгинья</span>, <span class="player-name" data-player="faker2k">faker2k</span></td>
+                        <td>Ядро атаки на Замок эликсира. Заходят первыми, ломают защиту, удерживают здание.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Защитники Обсерватории</strong></td>
+                        <td>2</td>
+                        <td><span class="player-name" data-player="kittt777">kittt777</span>, <span class="player-name" data-player="Djonny98">Djonny98</span></td>
+                        <td>Захватывают Наблюдательный пункт на первой минуте и удерживают его (+10% к очкам).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ротация / Поддержка</strong></td>
+                        <td>3</td>
+                        <td><span class="player-name" data-player="ЧумаВой">ЧумаВой</span>, <span class="player-name" data-player="Anchorro">Anchorro</span>, <span class="player-name" data-player="Murchik-mur-mur">Murchik-mur-mur</span></td>
+                        <td>Помогают там, где идёт самая жаркая борьба, или мешают врагу на соседних точках.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Группа «Браво» (10 человек): мобильность, фланги и ресурсы</h3>
+        <p>Отвечает за Врата миграции, Алхимические мастерские и сбор трав — обеспечивает тыл и не даёт врагу переиграть по карте.</p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th>Кол-во</th>
+                        <th>Состав</th>
+                        <th>Задача и позиция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Лидер группы (R4)</strong></td>
+                        <td>1</td>
+                        <td><span class="player-name" data-player="SharlottaSha">SharlottaSha</span></td>
+                        <td>Координирует «Браво», следит за появлением лагерей с травами и угрозами на флангах.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Захватчики Врат миграции</strong></td>
+                        <td>2</td>
+                        <td><span class="player-name" data-player="FrostmourneV2">FrostmourneV2</span>, <span class="player-name" data-player="Aanutka89">Aanutka89</span></td>
+                        <td>Приоритет №1 группы: захватывают Врата в первые минуты и удерживают их.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Контроль мастерских</strong></td>
+                        <td>2</td>
+                        <td><span class="player-name" data-player="artemsaibel">artemsaibel</span>, <span class="player-name" data-player="YanaYa">YanaYa</span></td>
+                        <td>Держат Алхимическую мастерскую у своего входа — стабильный источник очков и «якорь».</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Сборщики трав (с 13-й минуты)</strong></td>
+                        <td>3</td>
+                        <td><span class="player-name" data-player="Defibrillator360">Defibrillator360</span>, <span class="player-name" data-player="Graber">Graber</span>, <span class="player-name" data-player="TheMadDoctor26">TheMadDoctor26</span></td>
+                        <td>Когда появляются лагеря с травами, идут туда и приносят очки без прямого боя.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Фланговые рейдеры</strong></td>
+                        <td>2</td>
+                        <td><span class="player-name" data-player="LAPYlllKA">LAPYlllKA</span>, <span class="player-name" data-player="Mara19Dr">Mara19Dr</span></td>
+                        <td>Атакуют вражеские мастерские или лечебные палатки, если основные силы врага ушли.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 8: Индивидуальная тактика (NEW)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card">
+        <h2>👤 Индивидуальная тактика по игрокам</h2>
+        <p>Подробные инструкции для каждого участника на случай активной атаки противника.</p>
+
+        <h3>«Альфа» — центр, Обсерватория и подготовка Замка</h3>
+
+        <div class="phase-box alpha">
+            <h3><span class="player-name" data-player="adom">adom</span> — лидер «Альфы»</h3>
+            <p><strong>При активной атаке:</strong> оценивает, куда враг вложил основные силы. Если враг давит на Обсерваторию — отправляет туда ротацию или одного штурмовика.</p>
+        </div>
+
+        <div class="phase-box alpha">
+            <h3>Тяжёлые штурмовики: <span class="player-name" data-player="LFendeR">LFendeR</span>, <span class="player-name" data-player="Vadyxa">Vadyxa</span>, <span class="player-name" data-player="Ольгинья">Ольгинья</span>, <span class="player-name" data-player="faker2k">faker2k</span></h3>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li>если враг атакует Замок рано — занимают оборону только против равного или слабого противника; против сильного — отходят и ждут сбора;</li>
+                <li>если враг перевложился в Обсерваторию или Врата — один-два штурмовика могут нанести встречный удар, но основная группа не распыляется;</li>
+                <li><span class="player-name" data-player="LFendeR">LFendeR</span> как самый высокий уровень может временно вести локальную оборону, если <span class="player-name" data-player="adom">adom</span> занят другим направлением;</li>
+                <li><span class="player-name" data-player="faker2k">faker2k</span> действует за старшими, не вступает в одиночные проигрышные бои.</li>
+            </ul>
+        </div>
+
+        <div class="phase-box alpha">
+            <h3>Защитники Обсерватории: <span class="player-name" data-player="kittt777">kittt777</span> (24), <span class="player-name" data-player="Djonny98">Djonny98</span> (18)</h3>
+            <p><strong>До 10-й минуты:</strong> Обсерватория — приоритет №1 на 1-й минуте.</p>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li><span class="player-name" data-player="kittt777">kittt777</span> оценивает силы врага. Если атака слабая — удерживает точку. Если сильная — отходит к Замку/ротации, сообщает <span class="player-name" data-player="adom">adom</span>, не гибнет в обороне.</li>
+                <li><span class="player-name" data-player="Djonny98">Djonny98</span> без ТГ — заранее простая установка: при явно превосходящем враге не защищаться в одиночку, уходить к Замку или к мастерской, где есть союзники. Если враг слабый — держать Обсерваторию.</li>
+            </ul>
+        </div>
+
+        <div class="phase-box alpha">
+            <h3>Ротация / поддержка: <span class="player-name" data-player="ЧумаВой">ЧумаВой</span>, <span class="player-name" data-player="Anchorro">Anchorro</span> (19), <span class="player-name" data-player="Murchik-mur-mur">Murchik-mur-mur</span> (18)</h3>
+            <p><strong>До 10-й минуты:</strong> «пожарная команда».</p>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li>если враг давит на Обсерваторию — один игрок идёт на помощь <span class="player-name" data-player="kittt777">kittt777</span>/<span class="player-name" data-player="Djonny98">Djonny98</span>;</li>
+                <li>если враг атакует Врата — один помогает «Браво», но не все трое;</li>
+                <li>главное — не стоять без дела и не отдавать точки бесплатно, но и не кормить врага войсками.</li>
+            </ul>
+        </div>
+
+        <h3>«Браво» — Врата, мастерские, фланги</h3>
+
+        <div class="phase-box bravo">
+            <h3><span class="player-name" data-player="SharlottaSha">SharlottaSha</span> — лидер «Браво»</h3>
+            <p><strong>До 10-й минуты:</strong> координирует Врата миграции, свои мастерские и фланги.</p>
+            <p><strong>При активной атаке:</strong> решает, куда перебросить силы. Если враг активно давит на Замок — отправляет <span class="player-name" data-player="LAPYlllKA">LAPYlllKA</span> и <span class="player-name" data-player="Mara19Dr">Mara19Dr</span> в центр на помощь «Альфе». Если враг атакует Врата — усиливает <span class="player-name" data-player="FrostmourneV2">FrostmourneV2</span>/<span class="player-name" data-player="Aanutka89">Aanutka89</span> только при реальной возможности отбить; иначе приказывает отойти. Не даёт «Браво» распылиться на второстепенные точки.</p>
+        </div>
+
+        <div class="phase-box bravo">
+            <h3>Захватчики Врат миграции: <span class="player-name" data-player="FrostmourneV2">FrostmourneV2</span> (20), <span class="player-name" data-player="Aanutka89">Aanutka89</span> (22)</h3>
+            <p><strong>До 10-й минуты:</strong> захватить Врата в первые минуты и удерживать.</p>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li>если враг пришёл малыми силами — отбивают и держат Врата;</li>
+                <li>если враг пришёл крупными силами — не гибнут на Вратах, отходят к мастерским/Замку, сообщают <span class="player-name" data-player="SharlottaSha">SharlottaSha</span>;</li>
+                <li>Врата важны для мобильности, но до 10-й минуты потеря войск на Вратах дороже, чем временная потеря точки.</li>
+            </ul>
+        </div>
+
+        <div class="phase-box bravo">
+            <h3>Контроль мастерских: <span class="player-name" data-player="artemsaibel">artemsaibel</span> (24), <span class="player-name" data-player="YanaYa">YanaYa</span> (19)</h3>
+            <p><strong>До 10-й минуты:</strong> держат Алхимическую мастерскую у своего входа — это стабильные очки.</p>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li><span class="player-name" data-player="artemsaibel">artemsaibel</span> оценивает: слабый налёт — отбить, сильный — снять защиту и отойти;</li>
+                <li><span class="player-name" data-player="YanaYa">YanaYa</span> действует рядом, не остаётся в одиночку;</li>
+                <li>если мастерская в безопасности, один из них может точечно помочь на Вратах или у Обсерватории, но не оба сразу.</li>
+            </ul>
+        </div>
+
+        <div class="phase-box bravo">
+            <h3>Сборщики трав: <span class="player-name" data-player="Defibrillator360">Defibrillator360</span> (15), <span class="player-name" data-player="Graber">Graber</span> (16), <span class="player-name" data-player="TheMadDoctor26">TheMadDoctor26</span> (13)</h3>
+            <p><strong>До 10-й минуты:</strong> вспомогательная роль, до 13-й минуты сбор трав ещё не главный приоритет.</p>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li>не защищают точки в одиночку;</li>
+                <li><span class="player-name" data-player="Defibrillator360">Defibrillator360</span> без ТГ — при сильной атаке сразу отходит к союзникам/Замку, не пытается героически держать точку;</li>
+                <li><span class="player-name" data-player="Graber">Graber</span> и <span class="player-name" data-player="TheMadDoctor26">TheMadDoctor26</span> могут подстраховать Обсерваторию или мастерскую только если это безопасно и есть союзники рядом;</li>
+                <li>главное — не потерять этих игроков до 13-й минуты, когда им выходить на травы.</li>
+            </ul>
+        </div>
+
+        <div class="phase-box bravo">
+            <h3>Фланговые рейдеры: <span class="player-name" data-player="LAPYlllKA">LAPYlllKA</span> (20), <span class="player-name" data-player="Mara19Dr">Mara19Dr</span> (22)</h3>
+            <p><strong>До 10-й минуты:</strong> после Врат и мастерских работают по флангам.</p>
+            <p><strong>При активной атаке:</strong></p>
+            <ul>
+                <li>если враг стягивает основные силы к Замку — по тактике немедленно идут на помощь «Альфе» в центр, это их ключевая задача при активном натиске;</li>
+                <li>если враг атакует фланг «Браво» — отбивают только слабого противника; против сильного — уходят в рейд по тылам врага, чтобы отвлечь его силы;</li>
+                <li>не застревают в бою за второстепенную точку, если горит Замок или Обсерватория.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Важное примечание -->
+    <div class="important-note">
+        <h3 style="margin-top: 0; color: var(--accent-purple);">⚠️ Важное примечание по тактике</h3>
+        <p style="margin-bottom: 0;">Такое распределение не означает, что «Альфа» никогда не помогает «Браво». Лидеры групп должны постоянно быть на связи. Например, если «Браво» видит, что враг стягивает все силы к Замку, их фланговые рейдеры должны немедленно переключиться на помощь «Альфе» в центре. <strong>Гибкость и скорость реакции здесь важнее, чем строгое следование ролям.</strong></p>
+    </div>
+
+    <!-- Финальная инфографика -->
+    <div class="card">
+        <h2 style="border-color: var(--accent-gold);">💡 Сводный гайд по событию</h2>
+        <img src="3.jpg" style="width:100%; border-radius:8px;" alt="...">
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         РАЗДЕЛ 9: Участники (editable) — NEW
+    ═══════════════════════════════════════════════════════ -->
+    <div class="card" id="participants">
+        <h2>✏️ Участники</h2>
+        <p class="participant-hint">Измените имя в поле — и оно мгновенно обновится во всём тексте выше (в таблицах, поминутном плане и индивидуальной тактике).</p>
+
+        <h3 style="color: var(--accent-gold); margin-top: 1rem;">Группа «Альфа»</h3>
+        <div class="participants-grid">
+            <div class="input-group">
+                <label>Лидер «Альфы»</label>
+                <input type="text" class="player-input" data-player="adom" value="adom" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Штурмовик</label>
+                <input type="text" class="player-input" data-player="LFendeR" value="LFendeR" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Штурмовик</label>
+                <input type="text" class="player-input" data-player="Vadyxa" value="Vadyxa" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Штурмовик</label>
+                <input type="text" class="player-input" data-player="Ольгинья" value="Ольгинья" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Штурмовик</label>
+                <input type="text" class="player-input" data-player="faker2k" value="faker2k" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Защитник Обсерватории</label>
+                <input type="text" class="player-input" data-player="kittt777" value="kittt777" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Защитник Обсерватории</label>
+                <input type="text" class="player-input" data-player="Djonny98" value="Djonny98" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Ротация / поддержка</label>
+                <input type="text" class="player-input" data-player="ЧумаВой" value="ЧумаВой" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Ротация / поддержка</label>
+                <input type="text" class="player-input" data-player="Anchorro" value="Anchorro" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Ротация / поддержка</label>
+                <input type="text" class="player-input" data-player="Murchik-mur-mur" value="Murchik-mur-mur" placeholder="Имя...">
+            </div>
+        </div>
+
+        <h3 style="color: var(--accent-purple); margin-top: 1.5rem;">Группа «Браво»</h3>
+        <div class="participants-grid">
+            <div class="input-group">
+                <label>Лидер «Браво»</label>
+                <input type="text" class="player-input" data-player="SharlottaSha" value="SharlottaSha" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Захватчик Врат</label>
+                <input type="text" class="player-input" data-player="FrostmourneV2" value="FrostmourneV2" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Захватчик Врат</label>
+                <input type="text" class="player-input" data-player="Aanutka89" value="Aanutka89" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Контроль мастерских</label>
+                <input type="text" class="player-input" data-player="artemsaibel" value="artemsaibel" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Контроль мастерских</label>
+                <input type="text" class="player-input" data-player="YanaYa" value="YanaYa" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Сборщик трав</label>
+                <input type="text" class="player-input" data-player="Defibrillator360" value="Defibrillator360" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Сборщик трав</label>
+                <input type="text" class="player-input" data-player="Graber" value="Graber" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Сборщик трав</label>
+                <input type="text" class="player-input" data-player="TheMadDoctor26" value="TheMadDoctor26" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Фланговый рейдер</label>
+                <input type="text" class="player-input" data-player="LAPYlllKA" value="LAPYlllKA" placeholder="Имя...">
+            </div>
+            <div class="input-group">
+                <label>Фланговый рейдер</label>
+                <input type="text" class="player-input" data-player="Mara19Dr" value="Mara19Dr" placeholder="Имя...">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JavaScript — синхронизация имён
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+    'use strict';
+
+    // Сохраняем исходные имена на случай очистки поля
+    var defaults = {};
+    var inputs = document.querySelectorAll('.player-input');
+
+    inputs.forEach(function (input) {
+        defaults[input.dataset.player] = input.value;
+    });
+
+    function updatePlayerName(playerId, newName) {
+        var spans = document.querySelectorAll('[data-player="' + playerId + '"]');
+        spans.forEach(function (span) {
+            span.textContent = newName;
+        });
+    }
+
+    inputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+            var playerId = this.dataset.player;
+            var value = this.value.trim();
+            // Если поле пустое — возвращаем исходное имя
+            var displayName = value !== '' ? value : defaults[playerId];
+            updatePlayerName(playerId, displayName);
+        });
+
+        // При потере фокуса, если поле пустое — восстанавливаем исходное значение
+        input.addEventListener('blur', function () {
+            if (this.value.trim() === '') {
+                this.value = defaults[this.dataset.player];
+            }
+        });
+    });
+})();
+</script>
+
+</body>
+</html>
