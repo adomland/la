@@ -16,7 +16,11 @@
 
       e.preventDefault();
       
-      const headerH = header ? header.offsetHeight : 0;
+      // Проверяем, прилипает ли шапка к верху (на десктопе она sticky)
+      const isSticky = header ? window.getComputedStyle(header).position === 'sticky' : false;
+      const headerH = isSticky ? header.offsetHeight : 0;
+      
+      // Отнимаем 16px, чтобы заголовок не прилипал вплотную к верху экрана
       const y = target.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
 
       window.scrollTo({

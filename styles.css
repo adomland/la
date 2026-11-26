@@ -362,20 +362,23 @@ footer a{color:var(--accent-2)}
 #toTop.show{opacity:1; pointer-events:auto}
 #toTop:hover{background:rgba(74,222,128,.15); border-color:var(--accent)}
 
-/* ========== МОБИЛЬНАЯ ШАПКА (Всегда открытая) ========== */
+/* ========== МОБИЛЬНАЯ ШАПКА (Статичная, все кнопки в несколько рядов) ========== */
 @media (max-width: 900px) {
   header {
+    position: static !important; /* Шапка больше не прилипает к верху */
     height: auto !important;
-    position: sticky;
-    top: 0;
+    background: var(--bg); /* Делаем фон непрозрачным, так как шапка не поверх контента */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid var(--line);
   }
   
   .header-inner {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10px 12px;
-    gap: 8px; /* Уменьшили отступ между лого и меню */
+    padding: 12px 10px;
+    gap: 10px;
     height: auto;
   }
 
@@ -383,45 +386,37 @@ footer a{color:var(--accent-2)}
     width: 100%;
     justify-content: center;
     font-size: 1.1rem;
+    min-height: auto; /* Убираем лишнюю высоту */
   }
   
-  /* Оставляем текст логотипа, чтобы было понятно, что это за сайт */
   .logo span {
     display: inline; 
   }
 
+  /* Меню переносится на новые строки, без горизонтальной прокрутки */
   nav.top-nav {
-    position: static !important;
-    transform: none !important;
     display: flex !important;
-    flex-wrap: nowrap !important; /* ЗАПРЕЩАЕМ ПЕРЕНОС СТРОК */
-    justify-content: flex-start; /* Выравниваем по левому краю для скролла */
+    flex-wrap: wrap !important; /* Разрешаем перенос */
+    justify-content: center;
     width: 100%;
-    gap: 6px;
+    gap: 5px; /* Маленький отступ между кнопками */
     background: transparent;
     border: none;
     box-shadow: none;
-    padding: 0 0 4px 0;
+    padding: 0;
     margin: 0;
-    overflow-x: auto; /* ВКЛЮЧАЕМ ГОРИЗОНТАЛЬНУЮ ПРОКРУТКУ */
-    -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
-     /* Скрываем полосу прокрутки в Firefox */
+    overflow: visible;
   }
 
-  /* Скрываем полосу прокрутки в Chrome/Safari */
-  nav.top-nav::-webkit-scrollbar {
-    display: none;
-  }
-
+  /* Уменьшаем кнопки, чтобы они все влезли */
   nav.top-nav a {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    min-height: 38px;
-    border-radius: 8px;
+    padding: 5px 9px;
+    font-size: 0.75rem; /* Уменьшенный шрифт */
+    min-height: 32px; /* Уменьшенная высота */
+    border-radius: 6px;
     background: var(--bg-3);
     border: 1px solid var(--line);
-    color: var(--text);
-    flex: 0 0 auto; /* Запрещаем кнопкам сжиматься */
+    color: var(--muted);
   }
 
   nav.top-nav a:hover,
@@ -605,7 +600,7 @@ footer a{color:var(--accent-2)}
 .page-toc a:hover { color: var(--accent); border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.07); text-decoration: none; }
 
 @media (max-width: 720px) {
-  .page-toc { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 12px; gap: 6px; margin-bottom: 24px; }
+  .page-toc { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 12px; gap: 6px; margin-bottom: 24px; }
   .page-toc::-webkit-scrollbar { display: none; }
   .page-toc a { font-size: 0.8rem; padding: 6px 12px; min-height: 34px; }
 }
