@@ -10,20 +10,13 @@
 </head>
 <body>
 
-<!-- ================= HEADER ================= -->
 <header>
   <div class="header-inner">
     <a href="index.html" class="logo">
       <span class="dot"></span>
       Last Asylum <span>/ база знаний</span>
     </a>
-
-    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="topNav">
-      <span></span><span></span><span></span>
-    </button>
-
     <nav class="top-nav" id="topNav" aria-label="Разделы">
-      <!-- Класс active указывает на текущую страницу -->
       <a href="geroy.html" class="active">Герой</a>
       <a href="voyny.html">Исследования</a>
       <a href="urovni.html">Святилище</a>
@@ -34,39 +27,31 @@
   </div>
 </header>
 
-<!-- ================= CONTENT ================= -->
 <main class="page-content">
-
-  <!-- Хлебные крошки -->
   <div class="breadcrumbs">
     <a href="index.html">Главная</a> <span>/</span> <span class="current">Герой</span>
   </div>
 
-  <!-- Заголовок страницы -->
   <div class="page-header">
     <h1>🦸 Герой</h1>
     <p class="lead">Как понять роль героя, кого качать первым и как правильно расставить отряд.</p>
   </div>
 
-  <!-- РАЗДЕЛ 1: РОЛИ -->
   <section class="doc">
     <h2>Как понять роль героя</h2>
     <p>У героя есть иконка роли. Это первый ориентир, на который стоит смотреть.</p>
 
-    <!-- Сюда можно вставить первый скриншот с Артуром, Марленой и Харпером -->
-    <img src="img/heroes-top.jpg" alt="Примеры героев разных ролей" class="doc-image"> 
+    <img src="img/heroes-top.jpg" alt="Примеры героев разных ролей" class="doc-image" onerror="this.style.display='none'"> 
 
     <div class="roles-grid">
       <div class="role-card shield">
         <h3>🛡️ Щит — Танк</h3>
         <p>Такой герой должен принимать урон, стоять впереди и давать команде время. Его ценность не только в здоровье, но и в защитных навыках, снижении урона, устойчивости и способности удерживать бой.</p>
       </div>
-
       <div class="role-card damage">
         <h3>🔥 Огонь — Дамагер (Carry)</h3>
         <p>Это герой, который делает больно. Его задача — быстро снимать здоровье врагам, добивать цели и сокращать длительность боя. Чем быстрее умирают враги, тем меньше урона получает ваша команда.</p>
       </div>
-
       <div class="role-card support">
         <h3>🧪 Бутылка — Саппорт</h3>
         <p>Саппорт может усиливать союзников, давать баффы, помогать с ресурсами или поддерживать пачку. Но саппорт почти всегда зависит от того, насколько хорошо уже прокачаны остальные.</p>
@@ -79,12 +64,12 @@
     </div>
   </section>
 
-  <!-- РАЗДЕЛ 2: ПОРЯДОК ПРОКАЧКИ -->
   <section class="doc">
     <h2>Порядок прокачки героев</h2>
     <p>Главное правило: сначала тот, кто двигает бой. Вот базовый порядок, особенно важный для новичка.</p>
-<img src="img/lineup.jpg" alt="Расстановка отряда в игре" class="doc-image"> 
-    <!-- Визуализация порядка (1-2-3) -->
+    
+    <img src="img/lineup.jpg" alt="Расстановка отряда в игре" class="doc-image" onerror="this.style.display='none'"> 
+
     <div class="leveling-flow">
       <div class="step-card">
         <div class="step-num">1</div>
@@ -110,12 +95,10 @@
     </ul>
   </section>
 
-  <!-- РАЗДЕЛ 3: РАССТАНОВКА -->
   <section class="doc">
     <h2>Расстановка героев в отряде</h2>
     
-    <!-- Сюда можно вставить третий скриншот с расстановкой отряда -->
-   <img src="img/lineup2.jpg" alt="Расстановка отряда в игре" class="doc-image">
+    <img src="img/lineup2.jpg" alt="Расстановка отряда в игре" class="doc-image" onerror="this.style.display='none'">
 
     <div class="lineup-block">
       <h3>Первая линия</h3>
@@ -144,25 +127,20 @@
         <li><b>Саппорт:</b> Селия на старте, позже её может заменить Харпер — лечит, усиливает союзников или ослабляет врагов.</li>
       </ul>
     </div>
-
   </section>
 
-  <!-- Навигация вперед/назад -->
   <div class="page-nav">
     <a href="index.html" class="btn">← На главную</a>
-    <a href="voyny.html" class="btn primary">Следующий раздел: Войны →</a>
+    <a href="voyny.html" class="btn primary">Следующий раздел: Исследования →</a>
   </div>
-
 </main>
 
-<!-- ================= FOOTER ================= -->
 <footer>
   <p>Last Asylum: Plague — неофициальная база знаний. Материалы собраны из фанатской вики и гайдов сообщества.</p>
   <p>Обновлено: ноябрь 2026</p>
 </footer>
 
 <button id="toTop" aria-label="Наверх" title="Наверх">↑</button>
-
 <script src="script.js" defer></script>
 </body>
 </html>

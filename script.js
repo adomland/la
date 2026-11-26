@@ -16,8 +16,7 @@
 
       e.preventDefault();
       
-      // Учитываем высоту шапки, так как она теперь может меняться на мобильных
-      const headerH = header.offsetHeight;
+      const headerH = header ? header.offsetHeight : 0;
       const y = target.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
 
       window.scrollTo({
@@ -29,13 +28,15 @@
   });
 
   /* ---------- КНОПКА «НАВЕРХ» ---------- */
-  const onScroll = () => {
-    toTop.classList.toggle('show', window.scrollY > 500);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  if (toTop) {
+    const onScroll = () => {
+      toTop.classList.toggle('show', window.scrollY > 500);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-  toTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+    toTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 })();

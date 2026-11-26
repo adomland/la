@@ -13,7 +13,7 @@
   --radius:14px;
   --maxw:1180px;
   --header-h:64px;
-  --tap:44px; /* минимальный тач-таргет */
+  --tap:44px;
 }
 
 *{box-sizing:border-box}
@@ -31,7 +31,6 @@ body{
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
-body.menu-open{overflow:hidden}
 
 img,svg{max-width:100%; display:block}
 a{color:var(--accent-2); text-decoration:none}
@@ -74,34 +73,6 @@ header{
 }
 .logo span{color:var(--muted); font-weight:500; font-size:.85rem}
 
-/* ---- Кнопка-гамбургер ---- */
-.menu-toggle{
-  display:none;
-  width:var(--tap);
-  height:var(--tap);
-  padding:0;
-  border:1px solid var(--line);
-  background:var(--bg-2);
-  border-radius:10px;
-  cursor:pointer;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  margin-left:auto;
-  -webkit-tap-highlight-color:transparent;
-}
-.menu-toggle span{
-  display:block;
-  width:20px;height:2px;
-  background:var(--text);
-  border-radius:2px;
-  transition:transform .25s ease, opacity .2s ease;
-}
-.menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
-.menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
 /* ---- Верхнее меню (десктоп) ---- */
 nav.top-nav{
   display:flex;
@@ -121,9 +92,10 @@ nav.top-nav a{
   display:inline-flex;
   align-items:center;
 }
-nav.top-nav a:hover{
+nav.top-nav a:hover,
+nav.top-nav a.active{
   background:var(--bg-3);
-  color:var(--text);
+  color:var(--accent);
   text-decoration:none;
 }
 
@@ -390,46 +362,69 @@ footer a{color:var(--accent-2)}
 #toTop.show{opacity:1; pointer-events:auto}
 #toTop:hover{background:rgba(74,222,128,.15); border-color:var(--accent)}
 
-/* ============================================================
-   МОБИЛЬНАЯ ВЕРСИЯ
-   ============================================================ */
-
-/* --- Планшеты и мобильные: включаем гамбургер --- */
-@media (max-width: 900px){
-  .menu-toggle{display:flex}
-
-  nav.top-nav{
-    position:fixed;
-    top:var(--header-h);
-    left:0; right:0;
-    flex-direction:column;
-    gap:4px;
-    padding:12px;
-    background:var(--bg-2);
-    border-bottom:1px solid var(--line);
-    box-shadow:0 12px 28px rgba(0,0,0,.45);
-    transform:translateY(-140%);
-    transition:transform .3s ease;
-    max-height:calc(100vh - var(--header-h));
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    z-index:49;
+/* ========== МОБИЛЬНАЯ ШАПКА (Всегда открытая) ========== */
+@media (max-width: 900px) {
+  header {
+    height: auto !important;
+    position: sticky;
+    top: 0;
   }
-  nav.top-nav.open{transform:translateY(0)}
-  nav.top-nav a{
-    padding:14px 16px;
-    font-size:1rem;
-    min-height:48px;
-    border-radius:10px;
+  
+  .header-inner {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 12px;
+    height: auto;
   }
-  nav.top-nav a:active{background:var(--bg-3)}
+
+  .logo {
+    width: 100%;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+  
+  .logo span {
+    display: inline; 
+  }
+
+  nav.top-nav {
+    position: static !important;
+    transform: none !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  nav.top-nav a {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-height: 38px;
+    border-radius: 8px;
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    color: var(--text);
+    flex: 0 1 auto;
+  }
+
+  nav.top-nav a:hover,
+  nav.top-nav a.active {
+    background: rgba(74, 222, 128, 0.15);
+    border-color: rgba(74, 222, 128, 0.4);
+    color: var(--accent);
+  }
 }
 
-/* --- Телефоны --- */
+/* ========== ОБЩИЕ МОБИЛЬНЫЕ СТИЛИ ========== */
 @media (max-width: 720px){
-  .header-inner{padding:0 14px; gap:12px}
-  .logo span{display:none}
-
   .hero{padding:44px 16px 28px}
   .hero p{font-size:1rem}
   .hero-actions{flex-direction:column}
@@ -464,8 +459,11 @@ footer a{color:var(--accent-2)}
   footer{padding:22px 16px; font-size:.82rem}
 }
 
-/* --- Очень узкие телефоны --- */
 @media (max-width: 380px){
+  nav.top-nav a {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
   .hero h1{font-size:1.65rem}
   section.doc{padding:18px 14px}
   section.doc h2{font-size:1.15rem}
@@ -473,7 +471,6 @@ footer a{color:var(--accent-2)}
   .logo{font-size:.95rem}
 }
 
-/* --- Уважаем prefers-reduced-motion --- */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:.001ms !important;
@@ -481,60 +478,26 @@ footer a{color:var(--accent-2)}
     scroll-behavior:auto !important;
   }
 }
-/* ============================================================
-   СТИЛИ ДЛЯ ВНУТРЕННИХ СТРАНИЦ (например, geroy.html)
-   ============================================================ */
 
+/* ============================================================
+   ВНУТРЕННИЕ СТРАНИЦЫ
+   ============================================================ */
 .page-content {
-  max-width: 900px; /* Внутренние страницы делаем чуть уже для удобства чтения */
+  max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px 80px;
 }
 
-/* Хлебные крошки */
-.breadcrumbs {
-  font-size: 0.85rem;
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-.breadcrumbs a {
-  color: var(--muted);
-}
-.breadcrumbs a:hover {
-  color: var(--accent);
-}
-.breadcrumbs .current {
-  color: var(--text);
-}
-.breadcrumbs span {
-  margin: 0 6px;
-  opacity: 0.5;
-}
+.breadcrumbs { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
+.breadcrumbs a { color: var(--muted); }
+.breadcrumbs a:hover { color: var(--accent); }
+.breadcrumbs .current { color: var(--text); }
+.breadcrumbs span { margin: 0 6px; opacity: 0.5; }
 
-/* Заголовок страницы */
-.page-header {
-  margin-bottom: 36px;
-}
-.page-header h1 {
-  font-size: 2.2rem;
-  margin: 0 0 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.page-header .lead {
-  font-size: 1.1rem;
-  color: var(--muted);
-  margin: 0;
-}
+.page-header { margin-bottom: 36px; }
+.page-header h1 { font-size: 2.2rem; margin: 0 0 12px; display: flex; align-items: center; gap: 12px; }
+.page-header .lead { font-size: 1.1rem; color: var(--muted); margin: 0; }
 
-/* Активный пункт в меню */
-nav.top-nav a.active {
-  color: var(--accent);
-  background: rgba(74, 222, 128, 0.08);
-}
-
-/* Картинки внутри текста */
 .doc-image {
   width: 100%;
   border-radius: 12px;
@@ -543,18 +506,9 @@ nav.top-nav a.active {
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
-/* Сетка ролей */
-.roles-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 24px;
-}
-@media (min-width: 768px) {
-  .roles-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* Роли */
+.roles-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+@media (min-width: 768px) { .roles-grid { grid-template-columns: repeat(3, 1fr); } }
 .role-card {
   background: var(--bg-3);
   border: 1px solid var(--line);
@@ -563,964 +517,177 @@ nav.top-nav a.active {
   border-top: 4px solid var(--line);
   transition: transform 0.2s;
 }
-.role-card:hover {
-  transform: translateY(-2px);
-}
-.role-card h3 {
-  margin: 0 0 12px !important;
-  font-size: 1.1rem !important;
-  color: var(--text) !important;
-}
-.role-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-/* Цветовые акценты для ролей */
-.role-card.shield { border-top-color: #60a5fa; } /* Синий */
-.role-card.damage { border-top-color: #f87171; } /* Красный */
-.role-card.support { border-top-color: #4ade80; } /* Зеленый */
+.role-card:hover { transform: translateY(-2px); }
+.role-card h3 { margin: 0 0 12px !important; font-size: 1.1rem !important; color: var(--text) !important; }
+.role-card p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+.role-card.shield { border-top-color: #60a5fa; }
+.role-card.damage { border-top-color: #f87171; }
+.role-card.support { border-top-color: #4ade80; }
 
-/* Визуализация порядка прокачки */
-.leveling-flow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin: 30px 0;
-  flex-wrap: wrap;
-}
-.step-card {
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 16px 24px;
-  text-align: center;
-  min-width: 120px;
-  position: relative;
-}
-.step-num {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.step-title {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-.step-arrow {
-  font-size: 1.5rem;
-  color: var(--muted);
-  font-weight: 300;
-}
+/* Прокачка (1-2-3) */
+.leveling-flow { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 30px 0; flex-wrap: wrap; }
+.step-card { background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 120px; position: relative; }
+.step-num { font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+.step-title { font-weight: 600; font-size: 0.95rem; }
+.step-arrow { font-size: 1.5rem; color: var(--muted); font-weight: 300; }
 
-/* Блоки расстановки */
-.lineup-block {
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 20px;
-}
-.lineup-block h3 {
-  margin-top: 0 !important;
-  color: var(--text) !important;
-  font-size: 1.2rem !important;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
-  margin-bottom: 16px !important;
-}
-.lineup-block h4 {
-  margin: 20px 0 8px;
-  font-size: 0.95rem;
-  color: var(--accent);
-}
+/* Расстановка */
+.lineup-block { background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.lineup-block h3 { margin-top: 0 !important; color: var(--text) !important; font-size: 1.2rem !important; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 16px !important; }
+.lineup-block h4 { margin: 20px 0 8px; font-size: 0.95rem; color: var(--accent); }
 
-/* Навигация внизу страницы */
-.page-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
-  flex-wrap: wrap;
-  gap: 16px;
-}
+/* Навигация внизу */
+.page-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); flex-wrap: wrap; gap: 16px; }
 
-/* Адаптив для внутренних страниц */
 @media (max-width: 720px) {
-  .page-content {
-    padding: 24px 16px 60px;
-  }
-  .page-header h1 {
-    font-size: 1.8rem;
-  }
-  .leveling-flow {
-    flex-direction: column;
-  }
-  .step-arrow {
-    transform: rotate(90deg);
-  }
-  .page-nav {
-    flex-direction: column;
-  }
-  .page-nav .btn {
-    width: 100%;
-    justify-content: center;
-  }
+  .page-content { padding: 24px 16px 60px; }
+  .page-header h1 { font-size: 1.8rem; }
+  .leveling-flow { flex-direction: column; }
+  .step-arrow { transform: rotate(90deg); }
+  .page-nav { flex-direction: column; }
+  .page-nav .btn { width: 100%; justify-content: center; }
 }
+
 /* ============================================================
-   СТИЛИ ДЛЯ СТРАНИЦЫ СНАРЯЖЕНИЯ (snaryazhenie.html)
+   СНАРЯЖЕНИЕ (Таблицы, шаги)
    ============================================================ */
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 20px 0; border-radius: 12px; border: 1px solid var(--line); }
+.gear-table { width: 100%; border-collapse: collapse; background: var(--bg-3); font-size: 0.95rem; }
+.gear-table th, .gear-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+.gear-table th { background: var(--bg-2); color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.gear-table tr:last-child td { border-bottom: none; }
+.gear-table tbody tr:hover { background: rgba(74, 222, 128, 0.04); }
 
-/* Таблица */
-.table-responsive {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin: 20px 0;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-}
+.badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge.dd { background: rgba(248, 113, 113, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+.badge.tank { background: rgba(96, 165, 250, 0.15); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.3); }
+.badge.support { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
 
-.gear-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--bg-3);
-  font-size: 0.95rem;
-}
+.step-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.step-item { display: flex; align-items: center; gap: 16px; background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px; padding: 14px 20px; transition: border-color 0.2s; }
+.step-item:hover { border-color: rgba(74, 222, 128, 0.4); }
+.step-reward { font-family: ui-monospace, monospace; font-size: 0.85rem; font-weight: 700; color: var(--warn); background: rgba(251, 191, 36, 0.1); padding: 6px 12px; border-radius: 6px; white-space: nowrap; }
 
-.gear-table th,
-.gear-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-}
-
-.gear-table th {
-  background: var(--bg-2);
-  color: var(--muted);
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.gear-table tr:last-child td {
-  border-bottom: none;
-}
-
-.gear-table tbody tr:hover {
-  background: rgba(74, 222, 128, 0.04);
-}
-
-/* Бейджи ролей */
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.badge.dd {
-  background: rgba(248, 113, 113, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(248, 113, 113, 0.3);
-}
-
-.badge.tank {
-  background: rgba(96, 165, 250, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(96, 165, 250, 0.3);
-}
-
-.badge.support {
-  background: rgba(74, 222, 128, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-}
-
-/* Визуальный список шагов (Прокачка и приоритет звёзд) */
-.step-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.step-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 14px 20px;
-  transition: border-color 0.2s;
-}
-
-.step-item:hover {
-  border-color: rgba(74, 222, 128, 0.4);
-}
-
-.step-num {
-  width: 32px;
-  height: 32px;
-  flex: 0 0 32px;
-  display: grid;
-  place-items: center;
-  background: rgba(74, 222, 128, 0.1);
-  color: var(--accent);
-  font-weight: 700;
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-.step-desc {
-  flex: 1;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-.step-reward {
-  font-family: ui-monospace, monospace;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--warn);
-  background: rgba(251, 191, 36, 0.1);
-  padding: 6px 12px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
-/* Адаптив для мобильных */
 @media (max-width: 720px) {
-  .step-item {
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 16px;
-  }
-  .step-reward {
-    margin-left: auto;
-  }
-  .gear-table th,
-  .gear-table td {
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
+  .step-item { flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
+  .step-reward { margin-left: auto; }
+  .gear-table th, .gear-table td { padding: 10px 12px; font-size: 0.85rem; }
 }
+
 /* ============================================================
-   СТИЛИ ДЛЯ СТРАНИЦЫ УМЕНИЙ (umeniya.html)
+   УМЕНИЯ (Роли и списки)
    ============================================================ */
+.role-block { background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; border-left: 4px solid var(--accent); }
+.role-block h3 { margin: 0 0 6px !important; font-size: 1.1rem !important; color: var(--text) !important; }
+.role-examples { font-size: 0.85rem; color: var(--accent); margin: 0 0 12px; font-style: italic; }
+.role-note { font-size: 0.88rem; color: var(--muted); background: rgba(74, 222, 128, 0.05); border-radius: 8px; padding: 10px 14px; margin: 0; }
 
-/* Блок роли (ДД, Танк, Саппорт) */
-.role-block {
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px 24px;
-  margin-bottom: 20px;
-  border-left: 4px solid var(--accent);
-}
-.role-block h3 {
-  margin: 0 0 6px !important;
-  font-size: 1.1rem !important;
-  color: var(--text) !important;
-}
-.role-examples {
-  font-size: 0.85rem;
-  color: var(--accent);
-  margin: 0 0 12px;
-  font-style: italic;
-}
-.role-block ul {
-  margin: 0 0 12px;
-  padding-left: 20px;
-}
-.role-block li {
-  margin-bottom: 6px;
-  font-size: 0.93rem;
-}
-.role-note {
-  font-size: 0.88rem;
-  color: var(--muted);
-  background: rgba(74, 222, 128, 0.05);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin: 0;
-}
+.numbered-list { counter-reset: item; list-style: none; padding: 0; margin: 16px 0; }
+.numbered-list li { counter-increment: item; display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; font-size: 0.95rem; }
+.numbered-list li::before { content: counter(item); flex: 0 0 28px; height: 28px; display: grid; place-items: center; background: rgba(74, 222, 128, 0.12); color: var(--accent); font-weight: 700; border-radius: 8px; font-size: 0.85rem; }
 
-/* Нумерованный список */
-.numbered-list {
-  counter-reset: item;
-  list-style: none;
-  padding: 0;
-  margin: 16px 0;
-}
-.numbered-list li {
-  counter-increment: item;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 14px;
-  font-size: 0.95rem;
-}
-.numbered-list li::before {
-  content: counter(item);
-  flex: 0 0 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  background: rgba(74, 222, 128, 0.12);
-  color: var(--accent);
-  font-weight: 700;
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
+@media (max-width: 720px) { .role-block { padding: 16px 18px; } }
 
-/* Адаптив */
+/* ============================================================
+   СЕКРЕТЫ (Оглавление)
+   ============================================================ */
+.page-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 32px; padding: 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; }
+.page-toc a { font-size: 0.85rem; padding: 8px 14px; border-radius: 8px; background: var(--bg-3); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; transition: color 0.2s, border-color 0.2s, background 0.2s; min-height: 38px; display: inline-flex; align-items: center; }
+.page-toc a:hover { color: var(--accent); border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.07); text-decoration: none; }
+
 @media (max-width: 720px) {
-  .role-block {
-    padding: 16px 18px;
-  }
+  .page-toc { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 12px; gap: 6px; margin-bottom: 24px; }
+  .page-toc::-webkit-scrollbar { display: none; }
+  .page-toc a { font-size: 0.8rem; padding: 6px 12px; min-height: 34px; }
 }
+
 /* ============================================================
-   СТИЛИ ДЛЯ СТРАНИЦЫ СЕКРЕТОВ (sekret.html)
+   УРОВНИ (Таблица)
    ============================================================ */
+.levels-table { min-width: 800px; }
+.levels-table th { position: sticky; top: 0; background: var(--bg-2); z-index: 10; }
+.levels-table td { vertical-align: top; }
+.levels-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+.levels-table tbody tr:hover { background: rgba(74, 222, 128, 0.06); }
+.levels-table .level-col { font-weight: 800; color: var(--accent); font-size: 1.1rem; text-align: center; background: rgba(74, 222, 128, 0.03); }
+.levels-table .num-col { text-align: right; font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 0.9rem; white-space: nowrap; }
+.levels-table th:nth-child(6), .levels-table td:nth-child(6) { color: var(--warn); font-weight: 600; }
 
-/* Внутренняя навигация по странице */
-.page-toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 32px;
-  padding: 16px;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-
-.page-toc a {
-  font-size: 0.85rem;
-  padding: 8px 14px;
-  border-radius: 8px;
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  color: var(--muted);
-  white-space: nowrap;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.page-toc a:hover {
-  color: var(--accent);
-  border-color: rgba(74, 222, 128, 0.4);
-  background: rgba(74, 222, 128, 0.07);
-  text-decoration: none;
-}
-
-/* Отступ для якорей, чтобы заголовки не прятались под sticky-хедером */
-section.doc {
-  scroll-margin-top: calc(var(--header-h) + 20px);
-}
-
-/* Мобильная адаптация навигации: горизонтальный скролл */
 @media (max-width: 720px) {
-  .page-toc {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 12px;
-    gap: 6px;
-    margin-bottom: 24px;
-  }
-  .page-toc::-webkit-scrollbar {
-    display: none;
-  }
-  .page-toc a {
-    font-size: 0.8rem;
-    padding: 6px 12px;
-    min-height: 34px;
-  }
+  .levels-table td, .levels-table th { padding: 10px 12px; font-size: 0.85rem; }
+  .levels-table .level-col { font-size: 1rem; }
+  .levels-table .num-col { font-size: 0.8rem; }
 }
+
 /* ============================================================
-   СТИЛИ ДЛЯ ТАБЛИЦЫ УРОВНЕЙ (urovni.html)
+   ВОЙНЫ (Шкала и Маршрут)
    ============================================================ */
+.research-layout { display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 24px; }
+@media (min-width: 900px) { .research-layout { grid-template-columns: 2fr 1fr; align-items: start; } }
 
-.levels-table {
-  min-width: 800px; /* Заставляет таблицу скроллиться на мобильных, а не сжиматься */
-}
+.timeline { position: relative; padding-left: 24px; border-left: 2px solid var(--line); margin-left: 12px; }
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.step-number { position: absolute; left: -46px; top: 0; width: 40px; height: 40px; background: var(--bg-2); border: 2px solid var(--accent); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; box-shadow: 0 0 12px rgba(74, 222, 128, 0.2); z-index: 2; }
+.step-content { background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-left: 12px; }
+.step-content h3 { margin: 0 0 12px !important; font-size: 1.15rem !important; color: var(--text) !important; display: flex; align-items: center; gap: 10px; }
+.step-content h3 .icon { font-size: 1.3rem; }
+.step-content p { margin: 0 0 10px; font-size: 0.95rem; color: var(--muted); }
+.step-content p:last-child { margin-bottom: 0; }
+.step-content ul { margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); }
+.step-content li { margin-bottom: 6px; }
 
-.levels-table th {
-  position: sticky;
-  top: 0;
-  background: var(--bg-2);
-  z-index: 10;
-}
+.quick-map { background: var(--bg-2); border: 2px solid var(--line); border-radius: 14px; padding: 24px; position: sticky; top: calc(var(--header-h) + 20px); }
+.map-title { text-align: center; font-size: 1.2rem !important; margin: 0 0 24px !important; color: var(--accent) !important; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.map-flow { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.map-node { text-align: center; background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px; padding: 10px; width: 100%; max-width: 200px; }
+.map-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.map-label { font-size: 0.85rem; font-weight: 600; line-height: 1.3; color: var(--text); }
+.map-label small { font-weight: 400; color: var(--muted); font-size: 0.75rem; }
+.map-arrow { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin: 4px 0; }
 
-.levels-table td {
-  vertical-align: top;
-}
-
-/* Зебра для строк */
-.levels-table tbody tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.levels-table tbody tr:hover {
-  background: rgba(74, 222, 128, 0.06);
-}
-
-/* Выделение колонки с уровнем */
-.levels-table .level-col {
-  font-weight: 800;
-  color: var(--accent);
-  font-size: 1.1rem;
-  text-align: center;
-  background: rgba(74, 222, 128, 0.03);
-}
-
-/* Выравнивание чисел по правому краю для удобства сравнения */
-.levels-table .num-col {
-  text-align: right;
-  font-family: ui-monospace, "SF Mono", Consolas, monospace;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-/* Красим столбец со звёздами */
-.levels-table th:nth-child(6),
-.levels-table td:nth-child(6) {
-  color: var(--warn);
-  font-weight: 600;
-}
-
-/* Адаптив для таблицы */
 @media (max-width: 720px) {
-  .levels-table td, 
-  .levels-table th {
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
-  .levels-table .level-col {
-    font-size: 1rem;
-  }
-  .levels-table .num-col {
-    font-size: 0.8rem;
-  }
+  .timeline { padding-left: 16px; margin-left: 8px; }
+  .step-number { left: -36px; width: 32px; height: 32px; font-size: 0.9rem; }
+  .step-content { padding: 16px; margin-left: 8px; }
+  .step-content h3 { font-size: 1.05rem !important; }
+  .quick-map { position: static; margin-top: 16px; }
 }
+
 /* ============================================================
-   СТИЛИ ДЛЯ СТРАНИЦЫ ВОЙН / ИССЛЕДОВАНИЙ (voyny.html)
+   ГЛАВНАЯ (Инструменты и Дуэль)
    ============================================================ */
+.tools-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+@media (min-width: 900px) { .tools-grid { grid-template-columns: repeat(3, 1fr); } }
+.tool-card { display: flex; flex-direction: column; background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 24px; text-decoration: none; transition: transform 0.2s, border-color 0.2s, background 0.2s; position: relative; overflow: hidden; }
+.tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); opacity: 0; transition: opacity 0.2s; }
+.tool-card:hover { transform: translateY(-3px); border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.03); text-decoration: none; }
+.tool-card:hover::before { opacity: 1; }
+.tool-card h4 { margin: 0 0 12px; font-size: 1.15rem; color: var(--text); }
+.tool-card p { margin: 0 0 20px; font-size: 0.9rem; color: var(--muted); flex-grow: 1; }
+.tool-link { font-size: 0.9rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 6px; margin-top: auto; }
 
-/* Двухколоночный макет */
-.research-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-  margin-top: 24px;
-}
+.duel-motivation { background: rgba(251, 191, 36, 0.05); border-left: 4px solid var(--warn); border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 32px; font-size: 0.98rem; line-height: 1.7; }
+.duel-motivation p { margin: 0 0 16px; }
+.duel-motivation p:last-child { margin-bottom: 0; }
+.duel-motivation b { color: var(--warn); }
+.duel-summary h3 { margin-top: 0; margin-bottom: 16px; color: var(--accent); font-size: 1.1rem; }
 
-@media (min-width: 900px) {
-  .research-layout {
-    grid-template-columns: 2fr 1fr;
-    align-items: start;
-  }
-}
+.duel-schedule { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+.schedule-day { background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; border-left: 4px solid var(--accent-2); }
+.schedule-day h4 { margin: 0 0 8px; font-size: 1.05rem; color: var(--text); }
+.schedule-day p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+.schedule-day p:last-child { margin-bottom: 0; }
+.schedule-day b { color: var(--text); }
 
-/* --- ЛЕВАЯ КОЛОНКА: ШКАЛА --- */
-.timeline {
-  position: relative;
-  padding-left: 24px;
-  border-left: 2px solid var(--line);
-  margin-left: 12px;
-}
+.duel-main-advice { background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; }
+.duel-main-advice h4 { margin: 0 0 12px; color: var(--accent); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+.duel-main-advice p { margin: 0 0 12px; font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+.duel-main-advice p:last-child { margin-bottom: 0; color: var(--muted); font-size: 0.9rem; }
 
-.timeline-item {
-  position: relative;
-  margin-bottom: 24px;
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Кружок с цифрой */
-.step-number {
-  position: absolute;
-  left: -46px; /* Сдвиг влево за линию */
-  top: 0;
-  width: 40px;
-  height: 40px;
-  background: var(--bg-2);
-  border: 2px solid var(--accent);
-  color: var(--accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 1.1rem;
-  box-shadow: 0 0 12px rgba(74, 222, 128, 0.2);
-  z-index: 2;
-}
-
-/* Карточка с контентом */
-.step-content {
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px;
-  margin-left: 12px;
-}
-
-.step-content h3 {
-  margin: 0 0 12px !important;
-  font-size: 1.15rem !important;
-  color: var(--text) !important;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.step-content h3 .icon {
-  font-size: 1.3rem;
-}
-
-.step-content p {
-  margin: 0 0 10px;
-  font-size: 0.95rem;
-  color: var(--muted);
-}
-
-.step-content p:last-child {
-  margin-bottom: 0;
-}
-
-.step-content ul {
-  margin: 0;
-  padding-left: 20px;
-  font-size: 0.95rem;
-  color: var(--muted);
-}
-
-.step-content li {
-  margin-bottom: 6px;
-}
-
-/* --- ПРАВАЯ КОЛОНКА: КРАТКИЙ МАРШРУТ --- */
-.quick-map {
-  background: var(--bg-2);
-  border: 2px solid var(--line);
-  border-radius: 14px;
-  padding: 24px;
-  position: sticky;
-  top: calc(var(--header-h) + 20px); /* Прилипает при скролле */
-}
-
-.map-title {
-  text-align: center;
-  font-size: 1.2rem !important;
-  margin: 0 0 24px !important;
-  color: var(--accent) !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
-}
-
-.map-flow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.map-node {
-  text-align: center;
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 10px;
-  width: 100%;
-  max-width: 200px;
-}
-
-.map-icon {
-  font-size: 1.8rem;
-  margin-bottom: 4px;
-}
-
-.map-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--text);
-}
-
-.map-label small {
-  font-weight: 400;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
-.map-arrow {
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin: 4px 0;
-}
-
-/* --- АДАПТИВ --- */
 @media (max-width: 720px) {
-  .timeline {
-    padding-left: 16px;
-    margin-left: 8px;
-  }
-  
-  .step-number {
-    left: -36px;
-    width: 32px;
-    height: 32px;
-    font-size: 0.9rem;
-  }
-  
-  .step-content {
-    padding: 16px;
-    margin-left: 8px;
-  }
-  
-  .step-content h3 {
-    font-size: 1.05rem !important;
-  }
-
-  .quick-map {
-    position: static; /* Отключаем прилипание на телефонах */
-    margin-top: 16px;
-  }
-}
-/* ============================================================
-   СТИЛИ ДЛЯ ОБНОВЛЕННОЙ ГЛАВНОЙ СТРАНИЦЫ (tools + duel)
-   ============================================================ */
-
-/* --- Сетка инструментов --- */
-.tools-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-@media (min-width: 900px) {
-  .tools-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.tool-card {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 24px;
-  text-decoration: none;
-  transition: transform 0.2s, border-color 0.2s, background 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.tool-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.tool-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(74, 222, 128, 0.4);
-  background: rgba(74, 222, 128, 0.03);
-  text-decoration: none;
-}
-
-.tool-card:hover::before {
-  opacity: 1;
-}
-
-.tool-card h4 {
-  margin: 0 0 12px;
-  font-size: 1.15rem;
-  color: var(--text);
-}
-
-.tool-card p {
-  margin: 0 0 20px;
-  font-size: 0.9rem;
-  color: var(--muted);
-  flex-grow: 1;
-}
-
-.tool-link {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: auto;
-}
-
-/* --- Блок Дуэли Альянсов --- */
-.duel-motivation {
-  background: rgba(251, 191, 36, 0.05);
-  border-left: 4px solid var(--warn);
-  border-radius: 0 12px 12px 0;
-  padding: 24px;
-  margin-bottom: 32px;
-  font-size: 0.98rem;
-  line-height: 1.7;
-}
-
-.duel-motivation p {
-  margin: 0 0 16px;
-}
-
-.duel-motivation p:last-child {
-  margin-bottom: 0;
-}
-
-.duel-motivation b {
-  color: var(--warn);
-}
-
-.duel-summary h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  color: var(--accent);
-  font-size: 1.1rem;
-}
-
-.duel-days-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 32px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-@media (min-width: 720px) {
-  .duel-days-list {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.duel-days-list li {
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 0.9rem;
-  color: var(--muted);
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.duel-days-list li::before {
-  content: '•';
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.duel-days-list b {
-  color: var(--text);
-}
-
-.duel-action {
-  margin-top: 24px;
-}
-
-/* --- Мобильная адаптация --- */
-@media (max-width: 720px) {
-  .tool-card {
-    padding: 18px;
-  }
-  .duel-motivation {
-    padding: 16px;
-    font-size: 0.92rem;
-  }
-}
-/* ============================================================
-   ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ СВОДКИ ДУЭЛИ (index.html)
-   ============================================================ */
-
-.duel-schedule {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.schedule-day {
-  background: var(--bg-3);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 16px 20px;
-  border-left: 4px solid var(--accent-2); /* Выделяем полосой */
-}
-
-.schedule-day h4 {
-  margin: 0 0 8px;
-  font-size: 1.05rem;
-  color: var(--text);
-}
-
-.schedule-day p {
-  margin: 0 0 8px;
-  font-size: 0.9rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.schedule-day p:last-child {
-  margin-bottom: 0;
-}
-
-.schedule-day b {
-  color: var(--text);
-}
-
-/* Блок с главным советом */
-.duel-main-advice {
-  background: rgba(74, 222, 128, 0.08);
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  border-radius: 12px;
-  padding: 20px 24px;
-  margin-bottom: 32px;
-}
-
-.duel-main-advice h4 {
-  margin: 0 0 12px;
-  color: var(--accent);
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.duel-main-advice p {
-  margin: 0 0 12px;
-  font-size: 0.95rem;
-  color: var(--text);
-  line-height: 1.6;
-}
-
-.duel-main-advice p:last-child {
-  margin-bottom: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-/* Корректировка адаптива */
-@media (max-width: 720px) {
-  .schedule-day {
-    padding: 12px 16px;
-  }
-  .duel-main-advice {
-    padding: 16px;
-  }
-}
-/* ============================================================
-   ОБНОВЛЕНИЕ ШАПКИ ДЛЯ МОБИЛЬНЫХ (Без бургер-меню)
-   ============================================================ */
-
-/* Прячем кнопку гамбургера, если она где-то осталась */
-.menu-toggle {
-  display: none !important;
-}
-
-@media (max-width: 900px) {
-  /* Шапка становится резиновой и выстраивает элементы в колонку */
-  header {
-    height: auto !important;
-    position: sticky;
-    top: 0;
-  }
-  
-  .header-inner {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 12px 16px;
-    gap: 12px;
-    height: auto;
-  }
-
-  .logo {
-    width: 100%;
-    justify-content: center;
-    font-size: 1.1rem;
-  }
-  
-  /* Логотип на мобильных показываем полностью */
-  .logo span {
-    display: inline; 
-  }
-
-  /* Меню выстраивается в ряд с переносом */
-  nav.top-nav {
-    position: static;
-    transform: none !important;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    gap: 6px;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  /* Ссылки в виде аккуратных кнопок-чипов */
-  nav.top-nav a {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    min-height: 38px;
-    border-radius: 8px;
-    background: var(--bg-3);
-    border: 1px solid var(--line);
-    color: var(--text);
-    flex: 0 1 auto;
-  }
-
-  nav.top-nav a:hover,
-  nav.top-nav a.active {
-    background: rgba(74, 222, 128, 0.15);
-    border-color: rgba(74, 222, 128, 0.4);
-    color: var(--accent);
-  }
-}
-
-/* Очень узкие экраны */
-@media (max-width: 380px) {
-  nav.top-nav a {
-    font-size: 0.75rem;
-    padding: 6px 10px;
-  }
+  .tool-card { padding: 18px; }
+  .duel-motivation { padding: 16px; font-size: 0.92rem; }
+  .schedule-day { padding: 12px 16px; }
+  .duel-main-advice { padding: 16px; }
 }
