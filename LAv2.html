@@ -21,6 +21,30 @@
             max-width: 1600px;
             width: 100%;
         }
+        
+        /* Стили для кнопки возврата */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background: #1a2430;
+            border: 1px solid #2f4055;
+            border-radius: 8px;
+            color: #8a9bb0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: #2f4055;
+            color: #f0c45a;
+            border-color: #f0c45a;
+            text-decoration: none;
+        }
+
         h1 {
             font-size: 2rem;
             font-weight: 600;
@@ -287,6 +311,25 @@
             color: #d0e0f0;
             font-size: 0.9rem;
         }
+        
+        /* Стили для ссылки внизу */
+        .footer-nav {
+            margin-top: 32px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #1f2b38;
+        }
+        .footer-nav a {
+            color: #f0c45a;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
         @media (max-width: 1400px) {
             .calendar {
                 grid-template-columns: repeat(4, 1fr);
@@ -316,6 +359,10 @@
 </head>
 <body>
 <div class="container">
+    
+    <!-- Кнопка Назад на главную -->
+    <a href="index.html" class="back-btn">← Вернуться на главную</a>
+
     <h1>Last Asylum: Plague — Дуэль альянсов</h1>
     <div class="subtitle">Календарь фаз, заданий, очков и стратегий</div>
 
@@ -356,6 +403,12 @@
         • <strong>Ежедневный сброс</strong> игры происходит в <code>00:00 UTC−2</code>. Время начала и окончания фаз, а также локальные ивенты (Ворон, Таверна) автоматически пересчитываются под выбранный вами часовой пояс.<br>
         • <strong>Исследовательская лаборатория 15 ур.:</strong> Открывает ветку исследований Дуэли, дающую множитель к очкам за каждое действие. Без неё вы теряете очки.
     </div>
+
+    <!-- Ссылка на главную внизу -->
+    <div class="footer-nav">
+        <a href="index.html">← Вернуться на главную страницу базы знаний</a>
+    </div>
+
 </div>
 
 <script>
